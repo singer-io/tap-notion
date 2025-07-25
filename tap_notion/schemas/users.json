@@ -1,0 +1,25 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "user",
+      "id": "d7a7d87e-0b8f-4f6e-8c87-badf79b65b3c",
+      "type": "person",
+      "name": "test",
+      "avatar_url": "https://secure.notion-static.com/abc/avatar.png",
+      "person": {
+        "email": "test@example.com"
+      }
+    },
+    {
+      "object": "user",
+      "id": "5fa8b2f9-cfa2-46e0-a93f-b45c2be7e7d1",
+      "type": "bot",
+      "name": "Automation Bot",
+      "avatar_url": null,
+      "bot": {}
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}

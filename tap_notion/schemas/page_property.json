@@ -1,0 +1,94 @@
+{
+  "page_id": "ea6a1b9e-98de-4c98-b962-d4ef5738dbde",
+  "properties": [
+    {
+      "object": "property_item",
+      "id": "title",
+      "type": "title",
+      "title": {
+        "type": "text",
+        "text": {
+          "content": "Project Alpha",
+          "link": null
+        },
+        "plain_text": "Project Alpha"
+      }
+    },
+    {
+      "object": "property_item",
+      "id": "status",
+      "type": "select",
+      "select": {
+        "id": "opt1",
+        "name": "In Progress",
+        "color": "blue"
+      }
+    },
+    {
+      "object": "list",
+      "id": "tags",
+      "type": "multi_select",
+      "results": [
+        {
+          "object": "property_item",
+          "type": "multi_select",
+          "multi_select": {
+            "id": "tag1",
+            "name": "Urgent",
+            "color": "red"
+          }
+        },
+        {
+          "object": "property_item",
+          "type": "multi_select",
+          "multi_select": {
+            "id": "tag2",
+            "name": "Client",
+            "color": "green"
+          }
+        }
+      ],
+      "has_more": false,
+      "next_cursor": null
+    },
+    {
+      "object": "property_item",
+      "id": "due_date",
+      "type": "date",
+      "date": {
+        "start": "2025-07-30",
+        "end": null,
+        "time_zone": null
+      }
+    },
+    {
+      "object": "property_item",
+      "id": "is_complete",
+      "type": "checkbox",
+      "checkbox": false
+    },
+    {
+      "object": "list",
+      "id": "related_tasks",
+      "type": "relation",
+      "results": [
+        {
+          "object": "property_item",
+          "type": "relation",
+          "relation": {
+            "id": "3a5f67e2-f9ad-4902-84f4-8f77e26c765f"
+          }
+        },
+        {
+          "object": "property_item",
+          "type": "relation",
+          "relation": {
+            "id": "d5a8bb4a-fbe2-4a33-b89d-3c92847e2c2d"
+          }
+        }
+      ],
+      "has_more": false,
+      "next_cursor": null
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "object": "user",
+  "id": "a2b2c3d4-5678-90ab-cdef-1234567890ab",
+  "type": "bot",
+  "name": "Notion Data Sync Bot",
+  "avatar_url": null,
+  "bot": {
+    "owner": {
+      "type": "workspace",
+      "workspace": true
+    }
+  }
+}

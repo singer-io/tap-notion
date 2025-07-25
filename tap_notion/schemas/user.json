@@ -1,1 +1,11 @@
-{}
+{
+  "object": "user",
+  "id": "d7a7d87e-0b8f-4f6e-8c87-badf79b65b3c",
+  "type": "person",
+  "name": "Test User",
+  "avatar_url": "https://secure.notion-static.com/abc/avatar.png",
+  "person": {
+    "email": "test-user@example.com"
+  }
+}
+
