@@ -23,3 +23,4 @@ class Blocks(IncrementalStream):
             self.bookmark_value = super().get_bookmark(state, key)
 
         return self.bookmark_value
+
