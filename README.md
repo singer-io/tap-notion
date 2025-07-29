@@ -15,6 +15,23 @@ This tap:
     - [Users](https://developers.notion.com/reference/get-users)
 
     - [Blocks](https://developers.notion.com/reference/get-block-children)
+ 
+    - [User](https://developers.notion.com/reference/get-user)
+ 
+    - [block-children](https://developers.notion.com/reference/get-block-children)
+ 
+    - [comments](https://developers.notion.com/reference/retrieve-comments)
+ 
+    - [file](https://developers.notion.com/reference/file-object)
+ 
+    - [bot_user](https://developers.notion.com/reference/user)
+ 
+    - [page_property](https://developers.notion.com/reference/page-property-values)
+ 
+    - [file_upload](https://developers.notion.com/reference/file-object)
+ 
+    - [file_uploads_list](https://developers.notion.com/reference/file-object)
+      
 
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
@@ -40,6 +57,34 @@ This tap:
 - Data Key = results
 - Primary keys: ['id']
 - Replication strategy: INCREMENTAL
+
+** [block-children](https://developers.notion.com/reference/get-block-children)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE (child stream of blocks/pages)
+
+** [page_property](https://developers.notion.com/reference/page-property-values)
+- Primary keys: ['page_id']
+- Replication strategy: FULL_TABLE
+
+** [comments](https://developers.notion.com/reference/retrieve-comments)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+** [file_upload](https://developers.notion.com/reference/file-object)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+** [file_uploads_list](https://developers.notion.com/reference/file-object)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+** [User](https://developers.notion.com/reference/get-user)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+** [bot_user](https://developers.notion.com/reference/user)
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
 
 
 
