@@ -11,15 +11,15 @@ setup(name="tap-notion",
       classifiers=["Programming Language :: Python :: 3 :: Only"],
       py_modules=["tap_notion"],
       install_requires=[
-        "singer-python==5.12.1",
-        "requests==2.31.0",
+        "singer-python==6.1.1",
+        "requests==2.32.4",
    
       ],
       entry_points="""
           [console_scripts]
           tap-notion=tap_notion:main
       """,
-      packages=["tap-notion"],
+      packages=["tap_notion"],
       package_data = {
           "tap_notion": ["schemas/*.json"],
       },
