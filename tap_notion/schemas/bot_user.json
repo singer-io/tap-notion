@@ -28,21 +28,6 @@
         "null"
       ]
     },
-    "person": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "email": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
     "bot": {
       "type": [
         "object",

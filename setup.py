@@ -1,7 +1,4 @@
-
-
 from setuptools import setup
-
 
 setup(name="tap-notion",
       version="1.0.0",

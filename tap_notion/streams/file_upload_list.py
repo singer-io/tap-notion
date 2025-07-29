@@ -4,10 +4,9 @@ from tap_notion.streams.abstracts import FullTableStream
 
 LOGGER = get_logger()
 
-
-class Databases(FullTableStream):
-    tap_stream_id = "databases"
+class FileUploadList(FullTableStream):
+    tap_stream_id = "file_upload_list"
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "databases"
+    path = "/v1/files/{file_id}"
