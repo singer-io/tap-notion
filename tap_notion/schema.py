@@ -52,17 +52,18 @@ def get_schemas() -> Tuple[Dict, Dict]:
 
         schemas[stream_name] = schema
         schema = singer.resolve_schema_references(schema, refs)
+        stream_instance = stream_obj(client=None, catalog=None)
 
         mdata = metadata.new()
         mdata = metadata.get_standard_metadata(
             schema=schema,
-            key_properties=getattr(stream_obj, "key_properties"),
-            valid_replication_keys=(getattr(stream_obj, "replication_keys") or []),
-            replication_method=getattr(stream_obj, "replication_method"),
+            key_properties=stream_instance.key_properties,
+            valid_replication_keys=(stream_instance.replication_keys or []),
+            replication_method=stream_instance.replication_method,
         )
         mdata = metadata.to_map(mdata)
 
-        automatic_keys = getattr(stream_obj, "replication_keys") or []
+        automatic_keys = stream_instance.replication_keys or []
         for field_name in schema["properties"].keys():
             if field_name in automatic_keys:
                 mdata = metadata.write(
