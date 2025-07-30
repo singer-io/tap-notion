@@ -22,7 +22,7 @@ def raise_for_error(response: requests.Response) -> None:
         response_json = response.json()
     except Exception:
         response_json = {}
-    if response.status_code != [200, 201, 204]:
+    if response.status_code not in [200, 201, 204]:
         if response_json.get("error"):
             message = "HTTP-error-code: {}, Error: {}".format(response.status_code, response_json.get("error"))
         else:
@@ -47,7 +47,7 @@ class Client:
     def __init__(self, config: Mapping[str, Any]) -> None:
         self.config = config
         self._session = session()
-        self.base_url = "https://api.notion.com/v1/"
+        self.base_url = "https://api.notion.com/v1"
 
 
         config_request_timeout = config.get("request_timeout")

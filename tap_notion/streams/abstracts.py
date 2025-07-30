@@ -93,10 +93,11 @@ class BaseStream(ABC):
          - https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md
         """
 
-
     def get_records(self) -> List:
-        """Interacts with api client interaction and pagination."""
-        self.params["start_cursor"] = self.page_size
+
+        if self.tap_stream_id not in ["user", "bot_user"]:
+            self.params["start_cursor"] = self.page_size
+
         next_page = 1
         while next_page:
             response = self.client.get(
@@ -105,7 +106,12 @@ class BaseStream(ABC):
             raw_records = response.get(self.data_key, [])
             next_page = response.get(self.next_page_key)
 
-            self.params[self.next_page_key] = next_page
+            if next_page:
+                self.params[self.next_page_key] = next_page
+            else:
+                # Remove next_page_key if pagination ends
+                self.params.pop(self.next_page_key, None)
+
             yield from raw_records
 
     def write_schema(self) -> None:

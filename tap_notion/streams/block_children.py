@@ -9,4 +9,4 @@ class BlockChildren(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "/v1/blocks/{block_id}/children"
+    path = "blocks/{block_id}/children"

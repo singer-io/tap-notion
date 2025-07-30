@@ -9,4 +9,4 @@ class FileUploadList(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "/v1/files/{file_id}"
+    path = "files/{file_id}"

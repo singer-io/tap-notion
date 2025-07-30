@@ -10,4 +10,4 @@ class PagesProperty(IncrementalStream):
     key_properties = ["id"]
     replication_method = "FULL_TABLE"
     replication_keys = []
-    path = "/v1/pages/{page_id}/properties/{property_id}"
+    path = "pages/{page_id}/properties/{property_id}"
