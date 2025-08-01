@@ -94,10 +94,6 @@ class BaseStream(ABC):
         """
 
     def get_records(self) -> List:
-
-        if self.tap_stream_id not in ["user", "bot_user"]:
-            self.params["start_cursor"] = self.page_size
-
         next_page = 1
         while next_page:
             response = self.client.get(
@@ -108,9 +104,6 @@ class BaseStream(ABC):
 
             if next_page:
                 self.params[self.next_page_key] = next_page
-            else:
-                # Remove next_page_key if pagination ends
-                self.params.pop(self.next_page_key, None)
 
             yield from raw_records
 
