@@ -47,7 +47,7 @@ class Client:
     def __init__(self, config: Mapping[str, Any]) -> None:
         self.config = config
         self._session = session()
-        self.base_url = "https://api.notion.com/v1/"
+        self.base_url = "https://api.notion.com/v1"
 
 
         config_request_timeout = config.get("request_timeout")
@@ -104,10 +104,12 @@ class Client:
             body (dict): only applicable to post request, body of the request
 
         Returns:
-            Dict,List,None: Returns a `Json Parsed` HTTP Response or None if exception
+            Dict,List,None: Returns a Json Parsed HTTP Response or None if exception
         """
         with metrics.http_request_timer(endpoint) as timer:
+            kwargs.pop('params')
+            kwargs.pop('timeout')
             response = self._session.request(method, endpoint, **kwargs)
-            raise_for_error(response)
+            # raise_for_error(response)
 
         return response.json()

@@ -9,4 +9,4 @@ class User(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "/v1/users/{user_id}"
+    path = "users/{user_id}"
