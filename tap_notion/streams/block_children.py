@@ -9,4 +9,8 @@ class BlockChildren(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "/v1/blocks/{block_id}/children"
+    path = "blocks/{block_id}/children"
+
+    def get_records(self) -> List:
+        self.params["start_cursor"] = self.page_size
+        return super().get_records()
