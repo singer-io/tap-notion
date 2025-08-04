@@ -2,6 +2,7 @@ from typing import Any, Dict, Mapping, Optional, Tuple
 
 import backoff
 import requests
+from tap_notion.exceptions import NotionBadRequestError
 from requests import session
 from requests.exceptions import Timeout, ConnectionError, ChunkedEncodingError
 from singer import get_logger, metrics
@@ -78,8 +79,9 @@ class Client:
         """Calls the make_request method with a prefixed method type `POST`"""
 
         headers, params = self.authenticate(headers, params)
-        self.__make_request("POST", endpoint, headers=headers, params=params, data=body, timeout=self.request_timeout)
-
+        # self.__make_request("POST", endpoint, headers=headers, params=params, data=body, timeout=self.request_timeout)
+        return self.__make_request("POST", endpoint, headers=headers, params=params, json=body,
+                                   timeout=self.request_timeout)
 
     @backoff.on_exception(
         wait_gen=backoff.expo,
@@ -107,9 +109,17 @@ class Client:
             Dict,List,None: Returns a Json Parsed HTTP Response or None if exception
         """
         with metrics.http_request_timer(endpoint) as timer:
-            kwargs.pop('params')
-            kwargs.pop('timeout')
-            response = self._session.request(method, endpoint, **kwargs)
-            # raise_for_error(response)
+            params = kwargs.pop("params", {})
+            timeout = kwargs.pop("timeout", REQUEST_TIMEOUT)
+
+            try:
+                response = self._session.request(method, endpoint, params=params, timeout=timeout, **kwargs)
+                raise_for_error(response)
+            except NotionBadRequestError as e:
+                LOGGER.error(f"[Notion API] Bad Request to: {endpoint}")
+                LOGGER.error(f"[Notion API] Status Code: {response.status_code}")
+                LOGGER.error(f"[Notion API] Response Body: {response.text}")
+                raise
 
         return response.json()
+
