@@ -30,9 +30,12 @@ class PagesProperty(FullTableStream):
             LOGGER.error("Failed to extract property_id from metadata.")
             return None
 
-    def get_records(self) -> List[Dict]:
+    def get_records(self, context: Dict = None) -> List[Dict]:
+        if not context:
+            raise ValueError("Missing context (parent_obj) in get_records for PagesProperty")
+
         self.params["page_size"] = self.page_size
-        self.url_endpoint = self.get_url_endpoint(self.parent_obj)
+        self.url_endpoint = self.get_url_endpoint(context)
 
         next_cursor = None
         while True:
