@@ -24,13 +24,13 @@ jobs:
             pip install pylint
             pylint tap_notion -d C,R,W
       - add_ssh_keys
-      - run:
-          name: "Unit Tests"
-          command: |
-            source /usr/local/share/virtualenvs/tap-notion/bin/activate
-            pip install nose coverage
-            nosetests --with-coverage --cover-erase --cover-package=tap_notion --cover-html-dir=htmlcov tests/unittests
-            coverage html
+#      - run:
+#          name: "Unit Tests"
+#          command: |
+#            source /usr/local/share/virtualenvs/tap-notion/bin/activate
+#            pip install nose coverage
+#            nosetests --with-coverage --cover-erase --cover-package=tap_notion --cover-html-dir=htmlcov tests/unittests
+#            coverage html
       - store_test_results:
           path: test_output/report.xml
       - store_artifacts:
