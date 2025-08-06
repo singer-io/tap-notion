@@ -13,14 +13,5 @@ class Blocks(IncrementalStream):
     data_key = "results"
     path = "blocks/{page_id}/children"
     parent = "pages"
+    children = ['block_children','comments']
     bookmark_value = None
-
-    def get_bookmark(self, state: Dict, key: Any = None) -> int:
-        """
-        Return initial bookmark value only for the child stream.
-        """
-        if not self.bookmark_value:        
-            self.bookmark_value = super().get_bookmark(state, key)
-
-        return self.bookmark_value
-
