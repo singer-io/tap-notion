@@ -9,8 +9,8 @@ class FileUpload(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    parent = "file_uploads"
-    path = "file_uploads/{id}"
+    parent = "file_upload_detail"
+    path = "file_upload_detail/{id}"
 
     def get_url_endpoint(self, context: Dict) -> str:
         file_id = context["id"]
