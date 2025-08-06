@@ -75,21 +75,12 @@ class Client:
         headers, params = self.authenticate(headers, params)
         return self.__make_request("GET", endpoint, headers=headers, params=params, timeout=self.request_timeout)
 
-    def post(self, endpoint: str, params: Dict, headers: Dict, body: Dict, path: str = None, json: Dict = None) -> Any:
+    def post(self, endpoint: str, params: Dict, headers: Dict, body: Dict, path: str = None) -> Any:
+        """Calls the make_request method with a prefixed method type `POST`"""
+
         headers, params = self.authenticate(headers, params)
-        headers.setdefault("Content-Type", "application/json")
-
-        # Use 'json' if provided, otherwise use 'body'
-        request_json = json if json is not None else body
-
-        return self.__make_request(
-            "POST",
-            endpoint,
-            headers=headers,
-            params=params,
-            json=request_json,
-            timeout=self.request_timeout,
-        )
+        return self.__make_request("POST", endpoint, headers=headers, params=params, json=body,
+                                   timeout=self.request_timeout)
 
     @backoff.on_exception(
         wait_gen=backoff.expo,
