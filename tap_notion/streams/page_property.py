@@ -8,6 +8,7 @@ class PagesProperty(FullTableStream):
     tap_stream_id = "pages_property"
     key_properties = ["id"]
     replication_method = "FULL_TABLE"
+    parent = "pages"
     path = "pages/{page_id}/properties/{property_id}"
 
     def get_url_endpoint(self, parent_obj: Dict = None) -> str:

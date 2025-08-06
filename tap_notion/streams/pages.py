@@ -35,7 +35,7 @@ class Pages(IncrementalStream):
             for record in self.get_records():
                 record = self.modify_object(record, parent_obj)
                 transformed_record = transformer.transform(record, self.schema, self.metadata)
-                # self.append_times_to_dates(transformed_record)
+
 
                 if self.is_selected():
                     write_record(self.tap_stream_id, transformed_record)
