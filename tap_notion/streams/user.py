@@ -9,4 +9,9 @@ class User(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "users/{user_id}"
+    parent = "users"
+    path = "users/{id}"
+
+    def get_url_endpoint(self, parent_obj: Dict = None) -> str:
+        """Prepare URL endpoint for child streams."""
+        return f"{self.client.base_url}/{self.path.format(id=parent_obj['id'])}"
