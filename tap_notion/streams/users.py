@@ -12,4 +12,3 @@ class Users(FullTableStream):
     data_key = "results"
     path = "users"
     replication_keys = []
-    children = ['user']

@@ -15,7 +15,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "format": "date-time"
     },
     "created_by": {
       "type": [
@@ -42,7 +43,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "format": "date-time"
     },
     "last_edited_by": {
       "type": [
@@ -278,4 +280,3 @@
   },
   "additionalProperties": false
 }
-
