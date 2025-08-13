@@ -9,7 +9,7 @@ class FileUpload(FullTableStream):
     key_properties = ["id"]
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
-    path = "files"
+    path = "file_upload"
 
     def parse_response(self, response):
         yield from response.json().get("results", [])
