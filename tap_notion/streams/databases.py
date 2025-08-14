@@ -7,18 +7,14 @@ LOGGER = get_logger()
 class Databases(FullTableStream):
     tap_stream_id = "databases"
     key_properties = ["id"]
-    replication_keys = []
-    replication_method = "FULL_TABLE"
+    replication_keys = ["last_edited_time"]
+    replication_method = "INCREMENTAL"
 
-    def get_records(self) -> Iterator[Dict]:
+    def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
         LOGGER.info("Fetching databases using Notion search API.")
-
         url = f"{self.client.base_url}/search"
         payload = {
-            "filter": {
-                "property": "object",
-                "value": "database"
-            },
+            "filter": {"property": "object", "value": "database"},
             "page_size": self.page_size
         }
 
@@ -41,3 +37,4 @@ class Databases(FullTableStream):
                 next_cursor = response.get("next_cursor")
             else:
                 break
+

@@ -11,15 +11,29 @@ class PageProperty(FullTableStream):
     replication_keys = []
     parent = "pages"
     children = []
-    path = "pages/{page_id}/properties/{property_id}"  # relative path, no /v1
+    path = "pages/{page_id}/properties/{property_id}"
 
-    def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
+    def get_url_endpoint(self, parent_obj: Dict = None) -> str:
         """
-        Fetches all properties for a given Notion page and yields them.
+        This method is called by the base sync(), but for PageProperty
+        we can't build the URL until we know the property_id.
+        So we return just the page endpoint if property_id isn't provided.
         """
         if not parent_obj:
-            LOGGER.info(f"Skipping {self.tap_stream_id} because no parent object was provided.")
-            return []
+            raise ValueError("Parent object required to build PageProperty URL")
+
+        page_id = parent_obj.get("page_id") or parent_obj.get("id")
+        property_id = parent_obj.get("property_id")
+
+        if not property_id:
+            # Just return the page URL; actual property URLs will be built in get_records()
+            return f"{self.client.base_url}/pages/{page_id}"
+
+        return f"{self.client.base_url}/{self.path.format(page_id=page_id, property_id=property_id)}"
+
+    def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
+        if not parent_obj:
+            raise ValueError("PageProperty must be run as a child of Pages stream")
 
         page_id = parent_obj["id"]
         LOGGER.info(f"START Fetching properties for page {page_id}")
@@ -33,7 +47,7 @@ class PageProperty(FullTableStream):
             if not prop_id:
                 continue
 
-            prop_url = f"{self.client.base_url}/{self.path.format(page_id=page_id, property_id=prop_id)}"
+            prop_url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
             prop_data = self.client.get(prop_url, params=self.params, headers=self.headers)
 
             yield {
@@ -42,7 +56,6 @@ class PageProperty(FullTableStream):
                 "property_id": prop_id,
                 "property_data": prop_data
             }
-
             total_properties += 1
 
         LOGGER.info(f"FINISHED Fetching properties for page {page_id}, total_properties: {total_properties}")

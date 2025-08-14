@@ -14,8 +14,8 @@ LOGGER = get_logger()
 class Comments(FullTableStream):
     tap_stream_id = "comments"
     key_properties = ["id"]
-    replication_keys = []
-    replication_method = "FULL_TABLE"
+    replication_keys = ["last_edited_time"]
+    replication_method = "INCREMENTAL"
     parent = "blocks"
     path = "comments"
 

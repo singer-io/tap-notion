@@ -93,7 +93,10 @@ class BaseStream(ABC):
          - https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md
         """
 
-    def get_records(self) -> List:
+    def get_records(self, parent_obj: Dict = None) -> List:
+        """
+        Fetch records from the API. Optionally takes a parent_obj when called from a child stream.
+        """
         next_page = 1
         while next_page:
             response = self.client.get(
@@ -178,7 +181,7 @@ class IncrementalStream(BaseStream):
         self.url_endpoint = self.get_url_endpoint(parent_obj)
 
         with metrics.record_counter(self.tap_stream_id) as counter:
-            for record in self.get_records():
+            for record in self.get_records(parent_obj=parent_obj):
                 record = self.modify_object(record, parent_obj)
                 transformed_record = transformer.transform(
                     record, self.schema, self.metadata
@@ -213,7 +216,7 @@ class FullTableStream(BaseStream):
         """Abstract implementation for `type: Fulltable` stream."""
         self.url_endpoint = self.get_url_endpoint(parent_obj)
         with metrics.record_counter(self.tap_stream_id) as counter:
-            for record in self.get_records():
+            for record in self.get_records(parent_obj=parent_obj):
                 transformed_record = transformer.transform(
                     record, self.schema, self.metadata
                 )

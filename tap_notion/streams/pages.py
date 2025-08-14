@@ -17,7 +17,11 @@ class Pages(IncrementalStream):
         super().__init__(*args, **kwargs)
         self.child_to_sync = [PageProperty(self.client)]
 
-    def get_records(self) -> Iterator[Dict[str, Any]]:
+    def get_records(self, parent_obj: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
+        """
+        Fetches all pages from Notion.
+        `parent_obj` is ignored because Pages is a top-level stream.
+        """
         LOGGER.info(f"START Syncing: {self.tap_stream_id}")
 
         url = f"{self.client.base_url}/search"
@@ -58,4 +62,3 @@ class Pages(IncrementalStream):
                 break
 
         LOGGER.info(f"FINISHED Syncing: {self.tap_stream_id}")
-

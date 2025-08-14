@@ -13,9 +13,14 @@ class BlockChildren(FullTableStream):
     path = "blocks/{block_id}/children"
 
     def get_url_endpoint(self, parent_obj: Dict = None) -> str:
-        """Prepare URL using the block id from parent."""
-        block_id = parent_obj.get("id")
+        """
+        Build the full URL endpoint for a specific block's children.
+        """
+        if not parent_obj:
+            raise ValueError("Parent object required to build BlockChildren URL")
+
+        block_id = parent_obj.get("block_id") or parent_obj.get("id")
         if not block_id:
             raise ValueError("Missing 'id' in parent object for BlockChildren.")
-        return f"{self.client.base_url}/blocks/{block_id}/children"
 
+        return f"{self.client.base_url}/{self.path.format(block_id=block_id)}"
