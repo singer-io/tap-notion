@@ -1,12 +1,15 @@
 from typing import Dict, Iterator, List
 from singer import get_logger
-from tap_notion.streams.abstracts import FullTableStream
+from tap_notion.streams.abstracts import IncrementalStream
 
 LOGGER = get_logger()
 
-class FileUpload(FullTableStream):
+class FileUpload(IncrementalStream):
     tap_stream_id = "file_upload"
     key_properties = ["id"]
-    replication_keys = []
-    replication_method = "FULL_TABLE"
-    path = "files/{file_id}"
+    replication_keys = ["last_edited_time"]
+    replication_method = "INCREMENTAL"
+    path = "file_upload"
+
+    def parse_response(self, response):
+        yield from response.json().get("results", [])

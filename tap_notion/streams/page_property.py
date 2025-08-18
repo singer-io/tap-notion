@@ -5,7 +5,7 @@ from tap_notion.streams.abstracts import IncrementalStream
 LOGGER = get_logger()
 
 
-class PagesProperty(IncrementalStream):
+class PageProperty(IncrementalStream):
     tap_stream_id = "pages_property"
     key_properties = ["id"]
     replication_method = "FULL_TABLE"
