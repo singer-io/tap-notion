@@ -17,7 +17,7 @@ class DummyIncrementalStream(IncrementalStream):
     replication_keys = ["updatedAt"]
     key_properties = ["id"]
     replication_method = "INCREMENTAL"
-    path = "pages.json"
+    path = "pages"
     data_key = "results"
 
 
@@ -26,7 +26,7 @@ class DummyFullTableStream(FullTableStream):
     replication_keys = []
     key_properties = ["id"]
     replication_method = "FULL_TABLE"
-    path = "blocks.json"
+    path = "blocks"
     data_key = "results"
 
 
@@ -69,7 +69,7 @@ def test_get_bookmark_uses_config_start_date(dummy_catalog, dummy_client):
 
 def test_get_url_endpoint(dummy_catalog, dummy_client):
     stream = DummyFullTableStream(client=dummy_client, catalog=dummy_catalog)
-    expected = "https://api.notion.com/v1/blocks.json"
+    expected = "https://api.notion.com/v1/blocks"
     result = stream.get_url_endpoint()
     assert result == expected
 
@@ -153,4 +153,5 @@ def test_incremental_stream_sync(mock_transformer, mock_write_record, mock_write
     assert count == 1
     assert mock_write_record.call_count == 1
     mock_write_bookmark.assert_called_once()
+
 

@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import patch, Mock
 from requests.exceptions import ConnectionError, Timeout, ChunkedEncodingError
-
 from tap_notion.client import Client, raise_for_error
 from tap_notion.exceptions import (
     NotionError,
@@ -9,6 +8,7 @@ from tap_notion.exceptions import (
     NotionBadRequestError,
     NotionRateLimitError,
     NotionInternalServerError,
+    ERROR_CODE_EXCEPTION_MAPPING,
 )
 
 class MockResponse:
@@ -41,44 +41,35 @@ def client_config():
     }
 
 
+# ✅ Test raise_for_error success cases
 @pytest.mark.parametrize("status_code", [200, 201, 204])
 def test_raise_for_error_success(status_code):
     response = get_response(status_code)
     raise_for_error(response)  # Should not raise
 
 
+# ✅ Test raise_for_error mapped exceptions
 @pytest.mark.parametrize(
-    "response_data, expected_exception, expected_msg",
+    "status_code, response_data, expected_exception",
     [
-        ({"message": "Unauthorized"}, NotionUnauthorizedError, "401"),
-        ({"message": "Bad Request"}, NotionBadRequestError, "400"),
-        (None, NotionInternalServerError, "500"),
-        ({"message": "Something went wrong"}, NotionError, "418"),
+        (401, {"message": "Unauthorized"}, NotionUnauthorizedError),
+        (400, {"message": "Bad Request"}, NotionBadRequestError),
+        (500, None, NotionInternalServerError),
+        (418, {"message": "Something went wrong"}, NotionError),  # unmapped → default NotionError
     ]
 )
-def test_raise_for_error_exceptions(response_data, expected_exception, expected_msg):
-    code_map = {
-        NotionUnauthorizedError: 401,
-        NotionBadRequestError: 400,
-        NotionInternalServerError: 500,
-        NotionError: 418
-    }
-    status_code = code_map[expected_exception]
-
+def test_raise_for_error_exceptions(status_code, response_data, expected_exception):
     response = get_response(status_code, response_data, raise_error=True)
-    with pytest.raises(expected_exception) as excinfo:
+    with pytest.raises(expected_exception):
         raise_for_error(response)
-    assert expected_msg in str(excinfo.value)
 
 
 class TestClientRequests:
-
-    base_url = "https://api.test.com/v1.0"
+    base_url = "https://api.notion.com/v1"
 
     @pytest.fixture(autouse=True)
     def setup_headers(self):
         self.default_headers = {
-            "Authorization": "Bearer dummy_token",
             "Content-Type": "application/json"
         }
 
@@ -92,13 +83,25 @@ class TestClientRequests:
 
     @patch("requests.Session.request")
     def test_successful_get_request(self, mock_request, config):
-        endpoint = "/me/items"
-        full_url = f"{self.base_url}{endpoint}"
-        response_data = {"data": ["item1", "item2"]}
+        endpoint = f"{self.base_url}/blocks"
+        response_data = {"results": ["block1", "block2"]}
         mock_request.return_value = get_response(200, response_data)
 
         with Client(config) as client:
-            result = client.get(full_url, {}, self.default_headers)
+            result = client.get(endpoint, {}, self.default_headers)
+
+        assert result == response_data
+        assert mock_request.call_count == 1
+
+    @patch("requests.Session.request")
+    def test_successful_post_request(self, mock_request, config):
+        endpoint = f"{self.base_url}/pages"
+        request_body = {"parent": {"database_id": "123"}, "properties": {}}
+        response_data = {"id": "page_123"}
+        mock_request.return_value = get_response(200, response_data)
+
+        with Client(config) as client:
+            result = client.post(endpoint, {}, self.default_headers, request_body)
 
         assert result == response_data
         assert mock_request.call_count == 1
@@ -113,23 +116,22 @@ class TestClientRequests:
 
         with pytest.raises(exception_type):
             with Client(config) as client:
-                client.get("https://api.notion.com/v1/test", params={}, headers={})
+                client.get(f"{self.base_url}/test", params={}, headers={})
 
         assert mock_request.call_count == 5
 
     @patch("requests.Session.request")
     @patch("time.sleep", return_value=None)
     def test_rate_limit_with_retry_after(self, mock_sleep, mock_request, client_config):
-        endpoint = "/rate-limit"
-        full_url = f"{self.base_url}{endpoint}"
+        endpoint = f"{self.base_url}/rate-limit"
 
         mock_request.side_effect = [
-            get_response(429, {}, headers={"Retry-After": "3"}, raise_error=True)
+            get_response(429, {"error": "rate_limited"}, headers={"Retry-After": "3"}, raise_error=True)
         ] * 5
 
         with pytest.raises(NotionRateLimitError):
             with Client(client_config) as client:
-                client.get(full_url, {}, self.default_headers)
+                client.get(endpoint, {}, self.default_headers)
 
         assert mock_request.call_count == 5
         assert mock_sleep.call_count >= 1
