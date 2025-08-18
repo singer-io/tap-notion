@@ -1,10 +1,10 @@
 from typing import Dict, Iterator, List
 from singer import get_logger
-from tap_notion.streams.abstracts import FullTableStream
+from tap_notion.streams.abstracts import FullTableStream, IncrementalStream
 
 LOGGER = get_logger()
 
-class Databases(FullTableStream):
+class Databases(IncrementalStream):
     tap_stream_id = "databases"
     key_properties = ["id"]
     replication_keys = ["last_edited_time"]

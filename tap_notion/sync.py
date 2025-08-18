@@ -35,10 +35,11 @@ def sync(client: Client, config: Dict, catalog: singer.Catalog, state) -> None:
     """
     Sync selected streams from catalog.
     """
-    # Only include top-level streams (no parent)
+
     streams_to_sync = [
-        s.stream for s in catalog.get_selected_streams(state)
-        if not STREAMS[s.stream].parent
+        stream_entry.stream
+        for stream_entry in catalog.get_selected_streams(state)
+        if not STREAMS[stream_entry.stream].parent
     ]
     LOGGER.info("selected_streams: {}".format(streams_to_sync))
 

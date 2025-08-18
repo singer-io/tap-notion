@@ -36,7 +36,7 @@ class PageProperty(FullTableStream):
             raise ValueError("PageProperty must be run as a child of Pages stream")
 
         page_id = parent_obj["id"]
-        LOGGER.info(f"START Fetching properties for page {page_id}")
+        LOGGER.debug(f"START Fetching properties for page {page_id}")
 
         page_url = f"{self.client.base_url}/pages/{page_id}"
         page_data = self.client.get(page_url, params=self.params, headers=self.headers)
@@ -58,4 +58,4 @@ class PageProperty(FullTableStream):
             }
             total_properties += 1
 
-        LOGGER.info(f"FINISHED Fetching properties for page {page_id}, total_properties: {total_properties}")
+        LOGGER.debug(f"FINISHED Fetching properties for page {page_id}, total_properties: {total_properties}")

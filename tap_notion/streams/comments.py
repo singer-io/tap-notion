@@ -1,17 +1,10 @@
 from typing import Dict, Iterator, List
 from singer import get_logger
-from tap_notion.streams.abstracts import FullTableStream
+from tap_notion.streams.abstracts import FullTableStream, IncrementalStream
 
 LOGGER = get_logger()
 
-from typing import Dict
-from singer import get_logger
-from tap_notion.streams.abstracts import FullTableStream
-
-LOGGER = get_logger()
-
-
-class Comments(FullTableStream):
+class Comments(IncrementalStream):
     tap_stream_id = "comments"
     key_properties = ["id"]
     replication_keys = ["last_edited_time"]

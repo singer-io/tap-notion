@@ -17,41 +17,30 @@ class Pages(IncrementalStream):
         super().__init__(*args, **kwargs)
         self.child_to_sync = [PageProperty(self.client)]
 
-    def get_records(self, parent_obj: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
-        """
-        Fetches all pages from Notion.
-        `parent_obj` is ignored because Pages is a top-level stream.
-        """
-        LOGGER.info(f"START Syncing: {self.tap_stream_id}")
-
-        url = f"{self.client.base_url}/search"
-        bookmark_date = self.get_bookmark(self.client.config, self.tap_stream_id)
-
+    def build_payload(self, next_cursor: str | None = None) -> dict:
         payload = {
-            "filter": {
-                "property": "object",
-                "value": "page"
-            },
+            "filter": {"property": "object", "value": "page"},
             "page_size": self.page_size,
             "sort": {
                 "direction": "ascending",
                 "timestamp": "last_edited_time"
-            }
+            },
         }
+        if next_cursor:
+            payload["start_cursor"] = next_cursor
+        return payload
+
+    def get_records(self, parent_obj: Dict[str, Any] = None) -> Iterator[Dict[str, Any]]:
+        LOGGER.debug(f"START Syncing: {self.tap_stream_id}")
+
+        url = f"{self.client.base_url}/search"
+        bookmark_date = self.get_bookmark(self.client.config, self.tap_stream_id)
 
         next_cursor = None
         while True:
-            if next_cursor:
-                payload["start_cursor"] = next_cursor
-
-            response = self.client.post(
-                url,
-                params={},  # No `updated_since` here
-                headers=self.headers,
-                body=payload
-            )
-
+            response = self.post_records(url, self.headers, next_cursor)
             results = response.get("results", [])
+
             for page in results:
                 if page.get("last_edited_time") and page["last_edited_time"] >= bookmark_date:
                     yield page
@@ -61,4 +50,5 @@ class Pages(IncrementalStream):
             else:
                 break
 
-        LOGGER.info(f"FINISHED Syncing: {self.tap_stream_id}")
+        LOGGER.debug(f"FINISHED Syncing: {self.tap_stream_id}")
+

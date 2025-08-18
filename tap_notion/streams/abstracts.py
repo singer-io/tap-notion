@@ -122,11 +122,30 @@ class BaseStream(ABC):
             )
             raise err
 
+    def build_payload(self, next_cursor: str | None = None) -> dict:
+        """
+        Build request payload. Can be overridden in child classes.
+        Default: returns empty dict for GET-based streams.
+        """
+        payload = {}
+        if next_cursor:
+            payload[self.next_page_key] = next_cursor
+        return payload
+
     def update_params(self, **kwargs) -> None:
         """
         Update params for the stream
         """
         self.params.update(kwargs)
+
+    def post_records(self, url: str, headers: dict, next_cursor: str | None = None) -> dict:
+        payload = self.build_payload(next_cursor)
+        return self.client.post(
+            url,
+            params={},
+            headers=headers,
+            body=payload
+        )
 
     def modify_object(self, record: Dict, parent_record: Dict = None) -> Dict:
         """
