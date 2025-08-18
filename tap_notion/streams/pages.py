@@ -1,4 +1,4 @@
-from typing import Dict, Any, Iterator
+from typing import Dict, Any, Iterator, Optional
 from singer import get_logger
 from tap_notion.streams.abstracts import IncrementalStream
 from .page_property import PageProperty
@@ -17,7 +17,7 @@ class Pages(IncrementalStream):
         super().__init__(*args, **kwargs)
         self.child_to_sync = [PageProperty(self.client)]
 
-    def build_payload(self, next_cursor: str | None = None) -> dict:
+    def build_payload(self, next_cursor: Optional[str] = None) -> dict:
         payload = {
             "filter": {"property": "object", "value": "page"},
             "page_size": self.page_size,
