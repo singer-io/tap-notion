@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Optional
 from singer import (
     Transformer,
     get_bookmark,
@@ -122,7 +122,7 @@ class BaseStream(ABC):
             )
             raise err
 
-    def build_payload(self, next_cursor: str | None = None) -> dict:
+    def build_payload(self, next_cursor: Optional[str] = None) -> dict:
         """
         Build request payload. Can be overridden in child classes.
         Default: returns empty dict for GET-based streams.
@@ -138,7 +138,7 @@ class BaseStream(ABC):
         """
         self.params.update(kwargs)
 
-    def post_records(self, url: str, headers: dict, next_cursor: str | None = None) -> dict:
+    def post_records(self, url: str, headers: dict, next_cursor: Optional[str] = None) -> dict:
         payload = self.build_payload(next_cursor)
         return self.client.post(
             url,
