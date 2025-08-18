@@ -184,10 +184,5 @@
         }
       }
     }
-  },
-  "required": [
-    "id",
-    "created_time",
-    "rich_text"
-  ]
+  }
 }

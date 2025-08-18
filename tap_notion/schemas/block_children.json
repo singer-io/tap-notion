@@ -226,9 +226,5 @@
       "additionalProperties": false
     }
   },
-  "additionalProperties": false,
-  "required": [
-    "id",
-    "type"
-  ]
+  "additionalProperties": false
 }

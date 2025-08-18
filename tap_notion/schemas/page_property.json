@@ -165,10 +165,5 @@
       "additionalProperties": false
     }
   },
-  "additionalProperties": false,
-  "required": [
-    "page_id",
-    "id",
-    "type"
-  ]
+  "additionalProperties": false
 }
