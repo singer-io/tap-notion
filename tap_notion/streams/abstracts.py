@@ -59,7 +59,7 @@ class BaseStream(ABC):
 
     @property
     @abstractmethod
-    def replication_keys(self) -> str:
+    def replication_keys(self) -> List[str]:
         """Defines the replication key for incremental sync mode of a
         stream."""
 
@@ -224,7 +224,7 @@ class IncrementalStream(BaseStream):
 
 
 class FullTableStream(BaseStream):
-    """Base Class for Incremental Stream."""
+    """Base Class for  FullStream."""
 
     def sync(
         self,
