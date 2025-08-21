@@ -18,10 +18,14 @@ class Databases(IncrementalStream):
             "page_size": self.page_size
         }
 
+        has_more = True
         next_cursor = None
-        while True:
+
+        while has_more:
             if next_cursor:
                 payload["start_cursor"] = next_cursor
+            else:
+                payload.pop("start_cursor", None)  # Ensure clean payload if no cursor yet
 
             response = self.client.post(
                 url,
@@ -33,8 +37,6 @@ class Databases(IncrementalStream):
             results = response.get("results", [])
             yield from results
 
-            if response.get("has_more"):
-                next_cursor = response.get("next_cursor")
-            else:
-                break
+            has_more = response.get("has_more", False)
+            next_cursor = response.get("next_cursor")
 

@@ -36,8 +36,10 @@ class Pages(IncrementalStream):
         url = f"{self.client.base_url}/search"
         bookmark_date = self.get_bookmark(self.client.config, self.tap_stream_id)
 
+        has_more = True
         next_cursor = None
-        while True:
+
+        while has_more:
             response = self.post_records(url, self.headers, next_cursor)
             results = response.get("results", [])
 
@@ -45,10 +47,7 @@ class Pages(IncrementalStream):
                 if page.get("last_edited_time") and page["last_edited_time"] >= bookmark_date:
                     yield page
 
-            if response.get("has_more"):
-                next_cursor = response.get("next_cursor")
-            else:
-                break
+            has_more = response.get("has_more", False)
+            next_cursor = response.get("next_cursor")
 
         LOGGER.debug(f"FINISHED Syncing: {self.tap_stream_id}")
-
