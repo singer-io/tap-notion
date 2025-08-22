@@ -10,33 +10,26 @@ class Databases(IncrementalStream):
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
 
-    def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
-        LOGGER.info("Fetching databases using Notion search API.")
-        url = f"{self.client.base_url}/search"
+    def build_payload(self, next_cursor=None):
         payload = {
             "filter": {"property": "object", "value": "database"},
-            "page_size": self.page_size
+            "page_size": self.page_size,
         }
+        if next_cursor:
+            payload["start_cursor"] = next_cursor
+        return payload
 
-        has_more = True
-        next_cursor = None
+    def get_records(self, parent_obj=None):
+        url = f"{self.client.base_url}/search"
+        has_more, next_cursor = True, None
 
         while has_more:
-            if next_cursor:
-                payload["start_cursor"] = next_cursor
-            else:
-                payload.pop("start_cursor", None)  # Ensure clean payload if no cursor yet
-
-            response = self.client.post(
-                url,
-                params={},
-                headers=self.headers,
-                body=payload
-            )
-
+            response = self.post_records(url, self.headers, next_cursor)
             results = response.get("results", [])
             yield from results
 
             has_more = response.get("has_more", False)
             next_cursor = response.get("next_cursor")
+
+
 

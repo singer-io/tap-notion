@@ -27,7 +27,6 @@ def raise_for_error(response: requests.Response) -> None:
 
         message = f"[Notion API] HTTP {response.status_code}: {error_message or default_message}"
 
-        # Centralized logging
         LOGGER.error(message)
         LOGGER.debug("Response body: %s", response.text)
 
@@ -82,7 +81,11 @@ class Client:
         """Calls the make_request method with a prefixed method type `POST`"""
 
         headers, params = self.authenticate(headers, params)
-        return self.__make_request("POST", endpoint, headers=headers, params=params, json=body,
+        return self.__make_request("POST",
+                                   endpoint,
+                                   headers=headers,
+                                   params=params,
+                                   json=body,
                                    timeout=self.request_timeout)
 
     @backoff.on_exception(
@@ -104,6 +107,4 @@ class Client:
             response = self._session.request(method, endpoint, params=params, timeout=timeout, **kwargs)
             raise_for_error(response)
             return response.json()
-
-
 
