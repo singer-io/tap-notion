@@ -8,13 +8,30 @@ This tap:
 
 - Pulls raw data from the [Notion API].
 - Extracts the following resources:
-    - [Pages](https://developers.notion.com/reference/get-page)
+    - [Pages](https://developers.notion.com/reference/retrieve-a-page)
 
     - [Databases](https://developers.notion.com/reference/retrieve-a-database)
 
     - [Users](https://developers.notion.com/reference/get-users)
 
-    - [Blocks](https://developers.notion.com/reference/get-block-children)
+    - [Blocks](https://developers.notion.com/reference/retrieve-a-block)
+ 
+    - [User](https://developers.notion.com/reference/get-user)
+ 
+    - [block-children](https://developers.notion.com/reference/get-block-children)
+ 
+    - [comments](https://developers.notion.com/reference/retrieve-a-comment)
+ 
+    - [file](https://developers.notion.com/reference/file-object)
+ 
+    - [bot_user](https://developers.notion.com/reference/get-self)
+ 
+    - [page_property](https://developers.notion.com/reference/retrieve-a-page-property)
+ 
+    - [file_upload](https://developers.notion.com/reference/retrieve-a-file-upload)
+ 
+    - [file_uploads_list](https://developers.notion.com/reference/list-file-uploads)
+      
 
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
@@ -23,23 +40,51 @@ This tap:
 ## Streams
 
 
-** [pages](https://developers.notion.com/reference/get-page)**
+**[pages](https://developers.notion.com/reference/retrieve-a-page)**
 - Primary keys: ['id']
 - Replication strategy: INCREMENTAL
 
-** [databases](https://developers.notion.com/reference/retrieve-a-database)**
+**[databases](https://developers.notion.com/reference/retrieve-a-database)**
 - Primary keys: ['id']
 - Replication strategy: FULL_TABLE
 
-** [users](https://developers.notion.com/reference/get-users)**
+**[users](https://developers.notion.com/reference/get-users)**
 - Data Key = results
 - Primary keys: ['id']
 - Replication strategy: FULL_TABLE
 
-** [blocks](https://developers.notion.com/reference/get-block-children)**
+**[blocks](https://developers.notion.com/reference/retrieve-a-block)**
 - Data Key = results
 - Primary keys: ['id']
 - Replication strategy: INCREMENTAL
+
+**[block-children](https://developers.notion.com/reference/get-block-children)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE (child stream of blocks/pages)
+
+**[page_property](https://developers.notion.com/reference/retrieve-a-page-property)**
+- Primary keys: ['page_id']
+- Replication strategy: FULL_TABLE
+
+**[comments](https://developers.notion.com/reference/retrieve-a-comment)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+**[file_upload](https://developers.notion.com/reference/retrieve-a-file-upload)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+**[file_uploads_list](https://developers.notion.com/reference/list-file-uploads)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+**[User](https://developers.notion.com/reference/get-user)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
+
+**[bot_user](https://developers.notion.com/reference/get-self)**
+- Primary keys: ['id']
+- Replication strategy: FULL_TABLE
 
 
 

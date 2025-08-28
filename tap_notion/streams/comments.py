@@ -4,11 +4,9 @@ from tap_notion.streams.abstracts import FullTableStream
 
 LOGGER = get_logger()
 
-
-class Users(FullTableStream):
-    tap_stream_id = "users"
+class Comments(FullTableStream):
+    tap_stream_id = "comments"
     key_properties = ["id"]
-    replication_method = "FULL_TABLE"
-    data_key = "results"
-    path = "users"
     replication_keys = []
+    replication_method = "FULL_TABLE"
+    path = "/v1/comments"
