@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List
+from typing import Dict
 from singer import get_logger
 from tap_notion.streams.abstracts import FullTableStream
 

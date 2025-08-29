@@ -1,8 +1,9 @@
-from typing import Dict, Iterator, List
+from typing import Dict, Iterator, Optional
 from singer import get_logger
-from tap_notion.streams.abstracts import FullTableStream, IncrementalStream
+from tap_notion.streams.abstracts import IncrementalStream
 
 LOGGER = get_logger()
+
 
 class Databases(IncrementalStream):
     tap_stream_id = "databases"
@@ -10,7 +11,8 @@ class Databases(IncrementalStream):
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
 
-    def build_payload(self, next_cursor=None):
+    def build_payload(self, next_cursor: Optional[str] = None) -> dict:
+        """Build request payload for Notion /search API to fetch databases."""
         payload = {
             "filter": {"property": "object", "value": "database"},
             "page_size": self.page_size,
@@ -19,16 +21,21 @@ class Databases(IncrementalStream):
             payload["start_cursor"] = next_cursor
         return payload
 
-    def get_records(self, parent_obj=None):
+    def get_records(self, parent_obj: Dict = None, state: Dict = None) -> Iterator[Dict]:
+        """Fetch database records incrementally using /search API."""
         url = f"{self.client.base_url}/search"
         has_more, next_cursor = True, None
 
-        # Get the last known bookmark
-        bookmark = self.get_bookmark(state={}, stream=self.tap_stream_id)
+        # Ensure state is not None
+        state = state or {}
+
+        # Get the last known bookmark (if available)
+        bookmark = self.get_bookmark(state=state, stream=self.tap_stream_id)
 
         while has_more:
-            response = self.post_records(url, self.headers, next_cursor)
+            response = self.post_records(url, self.client.headers, next_cursor)
             results = response.get("results", [])
+
             for record in results:
                 last_edited_time = record.get("last_edited_time")
                 if (
@@ -39,7 +46,3 @@ class Databases(IncrementalStream):
 
             has_more = response.get("has_more", False)
             next_cursor = response.get("next_cursor")
-
-
-
-
