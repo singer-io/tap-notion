@@ -1,16 +1,19 @@
-from typing import Any, Dict, Mapping, Optional, Tuple
-
 import backoff
 import requests
-from tap_notion.exceptions import NotionBadRequestError
+from typing import Any, Dict, Mapping, Optional, Tuple
 from requests import session
 from requests.exceptions import Timeout, ConnectionError, ChunkedEncodingError
 from singer import get_logger, metrics
 
-from tap_notion.exceptions import ERROR_CODE_EXCEPTION_MAPPING, NotionError, NotionBackoffError
+from tap_notion.exceptions import (
+    ERROR_CODE_EXCEPTION_MAPPING,
+    NotionError,
+    NotionBackoffError,
+)
 
 LOGGER = get_logger()
 REQUEST_TIMEOUT = 300
+
 
 def raise_for_error(response: requests.Response) -> None:
     """Raises the associated response exception. Logs API error details before raising."""
@@ -39,12 +42,10 @@ def raise_for_error(response: requests.Response) -> None:
 
 class Client:
     """
-    A Wrapper class.
-    ~~~
-    Performs:
-     - Authentication
-     - Response parsing
-     - HTTP Error handling and retry
+    A Wrapper class for the Notion API.
+    - Authentication
+    - Response parsing
+    - Error handling + retry
     """
 
     def __init__(self, config: Mapping[str, Any]) -> None:
@@ -52,9 +53,10 @@ class Client:
         self._session = session()
         self.base_url = "https://api.notion.com/v1"
 
-
         config_request_timeout = config.get("request_timeout")
-        self.request_timeout = float(config_request_timeout) if config_request_timeout else REQUEST_TIMEOUT
+        self.request_timeout = (
+            float(config_request_timeout) if config_request_timeout else REQUEST_TIMEOUT
+        )
 
     def __enter__(self):
         self.check_api_credentials()
@@ -64,29 +66,46 @@ class Client:
         self._session.close()
 
     def check_api_credentials(self) -> None:
+        """Optional preflight check — currently a stub"""
         pass
 
     def authenticate(self, headers: Dict, params: Dict) -> Tuple[Dict, Dict]:
-        """Authenticates the request with the token"""
-        headers["Authorization"] = self.config["auth_token"]
+        """Injects authorization + Notion version headers"""
+        headers["Authorization"] = f"Bearer {self.config['auth_token']}"
+        headers["Notion-Version"] = self.config.get("notion_version", "2022-06-28")
         return headers, params
 
     def get(self, endpoint: str, params: Dict, headers: Dict, path: str = None) -> Any:
-        """Calls the make_request method with a prefixed method type `GET`"""
+        """Wrapper for GET requests"""
         endpoint = endpoint or f"{self.base_url}/{path}"
         headers, params = self.authenticate(headers, params)
-        return self.__make_request("GET", endpoint, headers=headers, params=params, timeout=self.request_timeout)
+        return self.__make_request(
+            "GET",
+            endpoint,
+            headers=headers,
+            params=params,
+            timeout=self.request_timeout,
+        )
 
-    def post(self, endpoint: str, params: Dict, headers: Dict, body: Dict, path: str = None) -> Any:
-        """Calls the make_request method with a prefixed method type `POST`"""
-
+    def post(
+        self,
+        endpoint: str,
+        params: Dict,
+        headers: Dict,
+        body: Dict,
+        path: str = None,
+    ) -> Any:
+        """Wrapper for POST requests"""
+        endpoint = endpoint or f"{self.base_url}/{path}"
         headers, params = self.authenticate(headers, params)
-        return self.__make_request("POST",
-                                   endpoint,
-                                   headers=headers,
-                                   params=params,
-                                   json=body,
-                                   timeout=self.request_timeout)
+        return self.__make_request(
+            "POST",
+            endpoint,
+            headers=headers,
+            params=params,
+            json=body,
+            timeout=self.request_timeout,
+        )
 
     @backoff.on_exception(
         wait_gen=backoff.expo,
@@ -95,16 +114,19 @@ class Client:
             ConnectionError,
             ChunkedEncodingError,
             Timeout,
-            NotionBackoffError
+            NotionBackoffError,
         ),
         max_tries=5,
         factor=2,
     )
-    def __make_request(self, method: str, endpoint: str, **kwargs) -> Optional[Mapping[Any, Any]]:
+    def __make_request(
+        self, method: str, endpoint: str, **kwargs
+    ) -> Optional[Mapping[Any, Any]]:
         with metrics.http_request_timer(endpoint) as timer:
             params = kwargs.pop("params", {})
             timeout = kwargs.pop("timeout", REQUEST_TIMEOUT)
-            response = self._session.request(method, endpoint, params=params, timeout=timeout, **kwargs)
+            response = self._session.request(
+                method, endpoint, params=params, timeout=timeout, **kwargs
+            )
             raise_for_error(response)
             return response.json()
-

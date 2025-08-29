@@ -15,7 +15,7 @@ class Pages(IncrementalStream):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.child_to_sync = [PageProperty(self.client)]
+        self.child_to_sync = [PageProperty(self.client, self.catalog)]
 
     def build_payload(self, next_cursor: Optional[str] = None) -> dict:
         payload = {

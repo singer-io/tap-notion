@@ -23,13 +23,23 @@ class Databases(IncrementalStream):
         url = f"{self.client.base_url}/search"
         has_more, next_cursor = True, None
 
+        # Get the last known bookmark
+        bookmark = self.get_bookmark(state={}, stream=self.tap_stream_id)
+
         while has_more:
             response = self.post_records(url, self.headers, next_cursor)
             results = response.get("results", [])
-            yield from results
+            for record in results:
+                last_edited_time = record.get("last_edited_time")
+                if (
+                        last_edited_time is not None
+                        and (bookmark is None or last_edited_time > bookmark)
+                ):
+                    yield record
 
             has_more = response.get("has_more", False)
             next_cursor = response.get("next_cursor")
+
 
 
 

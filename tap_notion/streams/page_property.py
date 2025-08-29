@@ -38,8 +38,8 @@ class PageProperty(FullTableStream):
         page_id = parent_obj["id"]
         LOGGER.debug(f"START Fetching properties for page {page_id}")
 
-        page_url = f"{self.client.base_url}/pages/{page_id}"
-        page_data = self.client.get(page_url, params=self.params, headers=self.headers)
+        # Use parent_obj directly as page_data to avoid redundant API call
+        page_data = parent_obj
 
         total_properties = 0
         for prop_name, prop_info in page_data.get("properties", {}).items():
