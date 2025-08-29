@@ -114,19 +114,15 @@ class Client:
             ConnectionError,
             ChunkedEncodingError,
             Timeout,
-            NotionBackoffError,
+            NotionBackoffError
         ),
         max_tries=5,
         factor=2,
     )
-    def __make_request(
-        self, method: str, endpoint: str, **kwargs
-    ) -> Optional[Mapping[Any, Any]]:
+    def __make_request(self, method: str, endpoint: str, **kwargs) -> Optional[Mapping[Any, Any]]:
         with metrics.http_request_timer(endpoint) as timer:
             params = kwargs.pop("params", {})
             timeout = kwargs.pop("timeout", REQUEST_TIMEOUT)
-            response = self._session.request(
-                method, endpoint, params=params, timeout=timeout, **kwargs
-            )
+            response = self._session.request(method, endpoint, params=params, timeout=timeout, **kwargs)
             raise_for_error(response)
             return response.json()
