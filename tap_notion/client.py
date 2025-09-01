@@ -5,6 +5,7 @@ from requests import session
 from requests.exceptions import Timeout, ConnectionError, ChunkedEncodingError
 from singer import get_logger, metrics
 
+
 from tap_notion.exceptions import (
     ERROR_CODE_EXCEPTION_MAPPING,
     NotionError,
@@ -96,16 +97,16 @@ class Client:
         )
 
     def post(
-        self,
-        endpoint: str,
-        params: Dict,
-        headers: Dict,
-        body: Dict,
-        path: str = None,
+            self,
+            endpoint: str,
+            headers: Dict,
+            body: Dict,
+            params: Optional[Dict] = None,
+            path: str = None,
     ) -> Any:
         """Wrapper for POST requests"""
         endpoint = endpoint or f"{self.base_url}/{path}"
-        headers, params = self.authenticate(headers, params)
+        headers, params = self.authenticate(headers, params or {})
         return self.__make_request(
             "POST",
             endpoint,
@@ -118,19 +119,20 @@ class Client:
     @backoff.on_exception(
         wait_gen=backoff.expo,
         exception=(
-            ConnectionResetError,
-            ConnectionError,
-            ChunkedEncodingError,
-            Timeout,
-            NotionBackoffError
+                ConnectionResetError,
+                ConnectionError,
+                ChunkedEncodingError,
+                Timeout,
+                NotionBackoffError
         ),
         max_tries=5,
         factor=2,
     )
     def __make_request(self, method: str, endpoint: str, **kwargs) -> Optional[Mapping[Any, Any]]:
         with metrics.http_request_timer(endpoint) as timer:
-            params = kwargs.pop("params", {})
-            timeout = kwargs.pop("timeout", REQUEST_TIMEOUT)
-            response = self._session.request(method, endpoint, params=params, timeout=timeout, **kwargs)
+            # kwargs already contains params, headers, json, timeout, etc.
+            response = self._session.request(method, endpoint, **kwargs)
             raise_for_error(response)
             return response.json()
+
+

@@ -40,8 +40,15 @@ class BaseStream(ABC):
         self.catalog = catalog
         self.schema = catalog.schema.to_dict() if catalog else {}
         self.metadata = metadata.to_map(catalog.metadata) if catalog else {}
-        self.child_to_sync = []
         self.params = {}
+
+        self.child_to_sync = []
+
+        if self.children:
+            for child_class in self.children:
+                if isinstance(child_class, str):
+                    continue
+                self.child_to_sync.append(child_class(self.client, self.catalog))
 
     @property
     @abstractmethod

@@ -1,5 +1,6 @@
 from typing import Dict, Iterator, Optional
 from singer import get_logger
+from dateutil import parser
 from tap_notion.streams.abstracts import IncrementalStream
 
 LOGGER = get_logger()
@@ -29,8 +30,8 @@ class Databases(IncrementalStream):
         # Ensure state is not None
         state = state or {}
 
-        # Get the last known bookmark (if available)
         bookmark = self.get_bookmark(state=state, stream=self.tap_stream_id)
+        bookmark_dt = parser.isoparse(bookmark) if bookmark else None
 
         while has_more:
             response = self.post_records(url, self.client.headers, next_cursor)
@@ -38,11 +39,10 @@ class Databases(IncrementalStream):
 
             for record in results:
                 last_edited_time = record.get("last_edited_time")
-                if (
-                        last_edited_time is not None
-                        and (bookmark is None or last_edited_time > bookmark)
-                ):
-                    yield record
+                if last_edited_time is not None:
+                    record_dt = parser.isoparse(last_edited_time)
+                    if bookmark_dt is None or record_dt > bookmark_dt:
+                        yield record
 
             has_more = response.get("has_more", False)
             next_cursor = response.get("next_cursor")
