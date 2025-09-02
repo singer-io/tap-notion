@@ -30,7 +30,7 @@ class Databases(IncrementalStream):
         # Ensure state is not None
         state = state or {}
 
-        bookmark = self.get_bookmark(state=state, stream=self.tap_stream_id)
+        bookmark = self.get_bookmark(state, self.tap_stream_id)
         bookmark_dt = parser.isoparse(bookmark) if bookmark else None
 
         while has_more:

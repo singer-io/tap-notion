@@ -215,7 +215,7 @@ class IncrementalStream(BaseStream):
 
                 record_timestamp = transformed_record[self.replication_keys[0]]
                 if record_timestamp >= bookmark_date:
-                    if self.is_selected():
+                    if self.is_selected:
                         write_record(self.tap_stream_id, transformed_record)
                         counter.increment()
 
