@@ -30,7 +30,7 @@ class Databases(IncrementalStream):
         # Ensure state is not None
         state = state or {}
 
-        bookmark = self.get_bookmark(state, self.tap_stream_id)
+        bookmark = self.get_bookmark(state or {}, self.tap_stream_id)
         bookmark_dt = parser.isoparse(bookmark) if bookmark else None
 
         while has_more:
@@ -41,7 +41,7 @@ class Databases(IncrementalStream):
                 last_edited_time = record.get("last_edited_time")
                 if last_edited_time:
                     record_dt = parser.isoparse(last_edited_time)
-                    if not bookmark_dt or record_dt > bookmark_dt:
+                    if not bookmark_dt or record_dt >= bookmark_dt:
                         yield record
 
             has_more = response.get("has_more", False)

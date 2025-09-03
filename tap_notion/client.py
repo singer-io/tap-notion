@@ -134,6 +134,3 @@ class Client:
             response = self._session.request(method, endpoint, **kwargs)
             raise_for_error(response)
             return response.json()
-
-
-
