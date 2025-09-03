@@ -119,11 +119,11 @@ class Client:
     @backoff.on_exception(
         wait_gen=backoff.expo,
         exception=(
-                ConnectionResetError,
-                ConnectionError,
-                ChunkedEncodingError,
-                Timeout,
-                NotionBackoffError
+            ConnectionResetError,
+            ConnectionError,
+            ChunkedEncodingError,
+            Timeout,
+            NotionBackoffError
         ),
         max_tries=5,
         factor=2,

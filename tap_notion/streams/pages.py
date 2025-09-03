@@ -30,7 +30,7 @@ class Pages(IncrementalStream):
         return payload
 
     def get_records(self, parent_obj: Dict[str, Any] = None, state: Optional[dict] = None) -> Iterator[Dict[str, Any]]:
-        LOGGER.debug(f"START Syncing: {self.tap_stream_id}")
+        LOGGER.info(f"START Syncing: {self.tap_stream_id}")
         url = f"{self.client.base_url}/search"
         bookmark_date = self.get_bookmark(state or {}, self.tap_stream_id)
 
@@ -48,4 +48,4 @@ class Pages(IncrementalStream):
             has_more = response.get("has_more", False)
             next_cursor = response.get("next_cursor")
 
-        LOGGER.debug(f"FINISHED Syncing: {self.tap_stream_id}")
+        LOGGER.info(f"FINISHED Syncing: {self.tap_stream_id}")

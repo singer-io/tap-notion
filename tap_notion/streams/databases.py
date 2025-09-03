@@ -39,9 +39,9 @@ class Databases(IncrementalStream):
 
             for record in results:
                 last_edited_time = record.get("last_edited_time")
-                if last_edited_time is not None:
+                if last_edited_time:
                     record_dt = parser.isoparse(last_edited_time)
-                    if bookmark_dt is None or record_dt > bookmark_dt:
+                    if not bookmark_dt or record_dt > bookmark_dt:
                         yield record
 
             has_more = response.get("has_more", False)
