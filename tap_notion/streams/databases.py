@@ -27,9 +27,6 @@ class Databases(IncrementalStream):
         url = f"{self.client.base_url}/search"
         has_more, next_cursor = True, None
 
-        # Ensure state is not None
-        state = state or {}
-
         bookmark = self.get_bookmark(state or {}, self.tap_stream_id)
         bookmark_dt = parser.isoparse(bookmark) if bookmark else None
 
