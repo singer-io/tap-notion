@@ -1,7 +1,9 @@
 import pytest
 from unittest.mock import patch, Mock
+
 from requests.exceptions import ConnectionError, Timeout, ChunkedEncodingError
 from tap_notion.client import Client, raise_for_error
+from requests.exceptions import HTTPError
 from tap_notion.exceptions import (
     NotionError,
     NotionUnauthorizedError,
@@ -21,7 +23,7 @@ class MockResponse:
 
     def raise_for_status(self):
         if self.raise_error:
-            raise Exception("Mock HTTPError")
+            raise HTTPError("Mock HTTPError")
         return self.status_code
 
     def json(self):
@@ -41,21 +43,21 @@ def client_config():
     }
 
 
-# ✅ Test raise_for_error success cases
+# Test raise_for_error success cases
 @pytest.mark.parametrize("status_code", [200, 201, 204])
 def test_raise_for_error_success(status_code):
     response = get_response(status_code)
-    raise_for_error(response)  # Should not raise
+    raise_for_error(response)
 
 
-# ✅ Test raise_for_error mapped exceptions
+# Test raise_for_error mapped exceptions
 @pytest.mark.parametrize(
     "status_code, response_data, expected_exception",
     [
         (401, {"message": "Unauthorized"}, NotionUnauthorizedError),
         (400, {"message": "Bad Request"}, NotionBadRequestError),
         (500, None, NotionInternalServerError),
-        (418, {"message": "Something went wrong"}, NotionError),  # unmapped → default NotionError
+        (418, {"message": "Something went wrong"}, NotionError),
     ]
 )
 def test_raise_for_error_exceptions(status_code, response_data, expected_exception):
@@ -83,7 +85,7 @@ class TestClientRequests:
 
     @patch("requests.Session.request")
     def test_successful_get_request(self, mock_request, config):
-        endpoint = f"{self.base_url}/blocks"
+        endpoint = "/blocks"  # relative path, not full URL
         response_data = {"results": ["block1", "block2"]}
         mock_request.return_value = get_response(200, response_data)
 
@@ -95,7 +97,7 @@ class TestClientRequests:
 
     @patch("requests.Session.request")
     def test_successful_post_request(self, mock_request, config):
-        endpoint = f"{self.base_url}/pages"
+        endpoint = "/pages"
         request_body = {"parent": {"database_id": "123"}, "properties": {}}
         response_data = {"id": "page_123"}
         mock_request.return_value = get_response(200, response_data)
