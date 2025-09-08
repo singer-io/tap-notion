@@ -91,7 +91,6 @@ def test_get_url_endpoint_static_path(dummy_catalog, dummy_client):
 @patch("tap_notion.streams.abstracts.write_record")
 @patch("tap_notion.streams.abstracts.Transformer")
 def test_full_table_stream_sync(mock_transformer, mock_write_record, mock_counter, dummy_catalog, dummy_client):
-    from tap_notion.streams.user import User
 
     dummy_client.get.return_value = {
         "results": [{"id": "1"}, {"id": "2"}],
@@ -153,5 +152,3 @@ def test_incremental_stream_sync(mock_transformer, mock_write_record, mock_write
     assert count == 1
     assert mock_write_record.call_count == 1
     mock_write_bookmark.assert_called_once()
-
-

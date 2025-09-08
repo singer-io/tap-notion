@@ -84,25 +84,25 @@ class TestClientRequests:
         }
 
     @patch("requests.Session.request")
-    def test_successful_get_request(self, mock_request, config):
+    def test_successful_get_request(self, mock_request, client_config):
         endpoint = "/blocks"  # relative path, not full URL
         response_data = {"results": ["block1", "block2"]}
         mock_request.return_value = get_response(200, response_data)
 
-        with Client(config) as client:
+        with Client(client_config) as client:
             result = client.get(endpoint, {}, self.default_headers)
 
         assert result == response_data
         assert mock_request.call_count == 1
 
     @patch("requests.Session.request")
-    def test_successful_post_request(self, mock_request, config):
+    def test_successful_post_request(self, mock_request, client_config):
         endpoint = "/pages"
         request_body = {"parent": {"database_id": "123"}, "properties": {}}
         response_data = {"id": "page_123"}
         mock_request.return_value = get_response(200, response_data)
 
-        with Client(config) as client:
+        with Client(client_config) as client:
             result = client.post(endpoint, {}, self.default_headers, request_body)
 
         assert result == response_data
@@ -118,7 +118,7 @@ class TestClientRequests:
 
         with pytest.raises(exception_type):
             with Client(config) as client:
-                client.get(f"{self.base_url}/test", params={}, headers={})
+                client.get("/test", params={}, headers={})
 
         assert mock_request.call_count == 5
 
