@@ -30,8 +30,8 @@ class MockResponse:
         return self._json_data
 
 
-def get_response(status_code, json_data=None, headers=None, raise_error=False):
-    return MockResponse(status_code, json_data, raise_error, headers)
+def get_response(status_code, json_data=None, raise_error=False, headers=None, text=None):
+    return MockResponse(status_code, json_data, raise_error, headers, text)
 
 
 @pytest.fixture
