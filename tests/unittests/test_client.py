@@ -125,7 +125,7 @@ class TestClientRequests:
     @patch("requests.Session.request")
     @patch("time.sleep", return_value=None)
     def test_rate_limit_with_retry_after(self, mock_sleep, mock_request, client_config):
-        endpoint = f"{self.base_url}/rate-limit"
+        endpoint = "/rate-limit"
 
         mock_request.side_effect = [
             get_response(429, {"error": "rate_limited"}, headers={"Retry-After": "3"}, raise_error=True)

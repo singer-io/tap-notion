@@ -122,8 +122,6 @@ def test_full_table_stream_sync(mock_transformer, mock_write_record, mock_counte
     assert count == 2
     assert mock_write_record.call_count == 2
 
-
-
 @patch("tap_notion.streams.abstracts.metrics.record_counter")
 @patch("tap_notion.streams.abstracts.write_bookmark")
 @patch("tap_notion.streams.abstracts.write_record")
