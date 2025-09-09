@@ -85,7 +85,7 @@ class TestClientRequests:
 
     @patch("requests.Session.request")
     def test_successful_get_request(self, mock_request, client_config):
-        endpoint = "/blocks"  # relative path, not full URL
+        endpoint = "/blocks"  # relative path, not a full URL
         response_data = {"results": ["block1", "block2"]}
         mock_request.return_value = get_response(200, response_data)
 
