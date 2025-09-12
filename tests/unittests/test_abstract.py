@@ -68,6 +68,11 @@ def test_get_bookmark_uses_config_start_date(dummy_catalog, dummy_client):
 
 
 def test_get_url_endpoint(dummy_catalog, dummy_client):
+    """
+    Test retrieval of the URL endpoint.
+    This test ensures that the function responsible for getting the URL 
+    endpoint works as expected.
+    """
     stream = DummyFullTableStream(client=dummy_client, catalog=dummy_catalog)
     expected = "https://api.notion.com/v1/blocks"
     result = stream.get_url_endpoint()
@@ -91,7 +96,10 @@ def test_get_url_endpoint_static_path(dummy_catalog, dummy_client):
 @patch("tap_notion.streams.abstracts.write_record")
 @patch("tap_notion.streams.abstracts.Transformer")
 def test_full_table_stream_sync(mock_transformer, mock_write_record, mock_counter, dummy_catalog, dummy_client):
-
+    """
+    Test full table stream synchronization.
+    This test verifies the behavior of the full table stream sync process.
+    """
     dummy_client.get.return_value = {
         "results": [{"id": "1"}, {"id": "2"}],
         "next_cursor": None
@@ -127,6 +135,14 @@ def test_full_table_stream_sync(mock_transformer, mock_write_record, mock_counte
 @patch("tap_notion.streams.abstracts.write_record")
 @patch("tap_notion.streams.abstracts.Transformer")
 def test_incremental_stream_sync(mock_transformer, mock_write_record, mock_write_bookmark, mock_counter, dummy_catalog, dummy_client):
+    """
+    Test: Verifies that DummyIncrementalStream.sync correctly writes records and updates bookmarks.
+    Ensures that:
+    - Only selected streams are processed.
+    - Records are written using the provided transformer.
+    - Bookmarks are updated after syncing.
+    - The record counter is used to track the number of records processed.
+    """
     stream = DummyIncrementalStream(client=dummy_client, catalog=dummy_catalog)
     stream.is_selected = MagicMock(return_value=True)
 
