@@ -27,8 +27,8 @@ jobs:
           name: "Unit Tests"
           command: |
             source /usr/local/share/virtualenvs/tap-notion/bin/activate
-            pip install nose coverage
-            nosetests --with-coverage --cover-erase --cover-package=tap_notion --cover-html-dir=htmlcov tests/unittests
+            pip install pytest pytest-cov
+            pytest --cov=tap_notion --cov-report=html --cov-report=term tests/unittests
             coverage html
       - store_test_results:
           path: test_output/report.xml
