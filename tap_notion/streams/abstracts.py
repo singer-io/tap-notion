@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Optional
 from singer import (
     Transformer,
     get_bookmark,
@@ -40,8 +40,15 @@ class BaseStream(ABC):
         self.catalog = catalog
         self.schema = catalog.schema.to_dict() if catalog else {}
         self.metadata = metadata.to_map(catalog.metadata) if catalog else {}
-        self.child_to_sync = []
         self.params = {}
+
+        self.child_to_sync = []
+
+        if self.children:
+            for child_class in self.children:
+                if isinstance(child_class, str):
+                    continue
+                self.child_to_sync.append(child_class(self.client, self.catalog))
 
     @property
     @abstractmethod
@@ -59,7 +66,7 @@ class BaseStream(ABC):
 
     @property
     @abstractmethod
-    def replication_keys(self) -> str:
+    def replication_keys(self) -> List[str]:
         """Defines the replication key for incremental sync mode of a
         stream."""
 
@@ -93,10 +100,10 @@ class BaseStream(ABC):
          - https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md
         """
 
-
-    def get_records(self) -> List:
-        """Interacts with api client interaction and pagination."""
-        self.params["start_cursor"] = self.page_size
+    def get_records(self, parent_obj: Dict = None) -> List:
+        """
+        Fetch records from the API. Optionally takes a parent_obj when called from a child stream.
+        """
         next_page = 1
         while next_page:
             response = self.client.get(
@@ -105,7 +112,9 @@ class BaseStream(ABC):
             raw_records = response.get(self.data_key, [])
             next_page = response.get(self.next_page_key)
 
-            self.params[self.next_page_key] = next_page
+            if next_page:
+                self.params[self.next_page_key] = next_page
+
             yield from raw_records
 
     def write_schema(self) -> None:
@@ -120,11 +129,30 @@ class BaseStream(ABC):
             )
             raise err
 
+    def build_payload(self, next_cursor: Optional[str] = None) -> dict:
+        """
+        Build request payload. Can be overridden in child classes.
+        Default: returns empty dict for GET-based streams.
+        """
+        payload = {}
+        if next_cursor:
+            payload[self.next_page_key] = next_cursor
+        return payload
+
     def update_params(self, **kwargs) -> None:
         """
         Update params for the stream
         """
         self.params.update(kwargs)
+
+    def post_records(self, url: str, headers: dict, next_cursor: Optional[str] = None) -> dict:
+        payload = self.build_payload(next_cursor)
+        return self.client.post(
+            url,
+            params={},
+            headers=headers,
+            body=payload
+        )
 
     def modify_object(self, record: Dict, parent_record: Dict = None) -> Dict:
         """
@@ -179,7 +207,7 @@ class IncrementalStream(BaseStream):
         self.url_endpoint = self.get_url_endpoint(parent_obj)
 
         with metrics.record_counter(self.tap_stream_id) as counter:
-            for record in self.get_records():
+            for record in self.get_records(parent_obj=parent_obj):
                 record = self.modify_object(record, parent_obj)
                 transformed_record = transformer.transform(
                     record, self.schema, self.metadata
@@ -203,7 +231,7 @@ class IncrementalStream(BaseStream):
 
 
 class FullTableStream(BaseStream):
-    """Base Class for Incremental Stream."""
+    """Base Class for  FullStream."""
 
     def sync(
         self,
@@ -214,11 +242,11 @@ class FullTableStream(BaseStream):
         """Abstract implementation for `type: Fulltable` stream."""
         self.url_endpoint = self.get_url_endpoint(parent_obj)
         with metrics.record_counter(self.tap_stream_id) as counter:
-            for record in self.get_records():
+            for record in self.get_records(parent_obj=parent_obj):
                 transformed_record = transformer.transform(
                     record, self.schema, self.metadata
                 )
-                if self.is_selected:
+                if self.is_selected():
                     write_record(self.tap_stream_id, transformed_record)
                     counter.increment()
 

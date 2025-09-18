@@ -9,4 +9,4 @@ class BotUser(FullTableStream):
     key_properties = ["id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
-    path = "/v1/users/me"
+    path = "users/me"

@@ -13,6 +13,7 @@ class Blocks(IncrementalStream):
     data_key = "results"
     path = "blocks/{page_id}/children"
     parent = "pages"
+    children = ['block_children','comments']
     bookmark_value = None
 
     def get_bookmark(self, state: Dict, key: Any = None) -> int:
