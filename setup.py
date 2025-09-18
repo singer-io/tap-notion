@@ -1,10 +1,10 @@
 
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(name="tap-notion",
-      version="1.0.0",
+      version="0.0.1",
       description="Singer.io tap for extracting data from Notion API",
       author="Stitch",
       url="http://singer.io",
@@ -15,11 +15,12 @@ setup(name="tap-notion",
         "requests==2.32.4",
    
       ],
+      extras_require={"dev": ["pylint", "ipdb", "pytest"]},
       entry_points="""
           [console_scripts]
           tap-notion=tap_notion:main
       """,
-      packages=["tap_notion"],
+      packages=find_packages(),
       package_data = {
           "tap_notion": ["schemas/*.json"],
       },
