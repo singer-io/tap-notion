@@ -12,7 +12,7 @@ setup(name="tap-notion",
       py_modules=["tap_notion"],
       install_requires=[
         "singer-python==6.1.1",
-        "requests==2.32.4",
+        "requests==2.32.5",
    
       ],
       extras_require={"dev": ["pylint", "ipdb", "pytest"]},

@@ -74,14 +74,14 @@ class Client:
     def headers(self) -> Dict[str, str]:
         return {
             "Authorization": f"Bearer {self.config['auth_token']}",
-            "Notion-Version": self.config.get("notion_version", "2022-06-28"),
+            "Notion-Version": "2022-06-28",
             "Content-Type": "application/json"
         }
 
     def authenticate(self, headers: Dict, params: Dict) -> Tuple[Dict, Dict]:
         """Injects authorization + Notion version headers"""
         headers["Authorization"] = f"Bearer {self.config['auth_token']}"
-        headers["Notion-Version"] = self.config.get("notion_version", "2022-06-28")
+        headers["Notion-Version"] = "2022-06-28"
         return headers, params
 
     def get(self, endpoint: str, params: Dict, headers: Dict, path: str = None) -> Any:

@@ -7,7 +7,7 @@ from tap_notion.sync import sync
 
 LOGGER = singer.get_logger()
 
-REQUIRED_CONFIG_KEYS = ['auth_token', 'notion_version', 'start_date', 'database_ids']
+REQUIRED_CONFIG_KEYS = ['auth_token', 'start_date', 'database_ids']
 
 def do_discover():
     """

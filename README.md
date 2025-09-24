@@ -116,13 +116,15 @@ This tap:
 
 3. Create your tap's `config.json` file.  The tap config file for this tap should include these entries:
    - `start_date` - the default value to use if no bookmark exists for an endpoint (rfc3339 date string)
-   - `user_agent` (string, optional): Process and email for API logging purposes. Example: `tap-notion <api_user_email@your_company.com>`
+   - `auth_token` (string): Required to get the response from the api
+   - `database_ids` (String): Required For database api's
    - `request_timeout` (integer, `300`): Max time for which request should wait to get a response. Default request_timeout is 300 seconds.
    
     ```json
     {
-        "start_date": "2019-01-01T00:00:00Z",
-        "user_agent": "tap-notion <api_user_email@your_company.com>",
+        "auth_token": "auth token",
+        "start_date": "2023-01-01T00:00:00Z",
+        "database_ids":"DBid",
         "request_timeout": 300,
         ...
     }```
@@ -195,7 +197,7 @@ This tap:
     Note, you may need to install test dependencies.
 
     ```
-    pip install -e .'[dev]'
+    pip install -e . [dev]
     ```
 ---
 
