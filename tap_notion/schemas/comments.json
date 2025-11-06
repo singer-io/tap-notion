@@ -1,0 +1,190 @@
+{
+  "type": "object",
+  "properties": {
+    "object": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "parent": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "database_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "block_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "discussion_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_time": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "last_edited_time": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "object": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "rich_text": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plain_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "href": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "annotations": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "bold": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "italic": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "strikethrough": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "underline": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "code": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "text": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "content": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "link": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
