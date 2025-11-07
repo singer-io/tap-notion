@@ -3,37 +3,39 @@
   "properties": {
     "object": {
       "type": [
+        "null",
         "string"
       ]
     },
     "id": {
       "type": [
+        "null",
         "string"
       ]
     },
     "created_time": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
       ],
       "format": "date-time"
     },
     "created_by": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ],
       "properties": {
         "object": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "id": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         }
       },
@@ -41,27 +43,27 @@
     },
     "last_edited_time": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
       ],
       "format": "date-time"
     },
     "last_edited_by": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ],
       "properties": {
         "object": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "id": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         }
       },
@@ -69,34 +71,37 @@
     },
     "title": {
       "type": [
-        "array",
-        "null"
+        "null",
+        "array"
       ],
       "items": {
-        "type": "object",
+        "type": [
+          "null",
+          "object"
+        ],
         "properties": {
           "type": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           },
           "text": {
             "type": [
-              "object",
-              "null"
+              "null",
+              "object"
             ],
             "properties": {
               "content": {
                 "type": [
-                  "string",
-                  "null"
+                  "null",
+                  "string"
                 ]
               },
               "link": {
                 "type": [
-                  "string",
-                  "null"
+                  "null",
+                  "string"
                 ]
               }
             },
@@ -104,14 +109,14 @@
           },
           "plain_text": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           },
           "href": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           }
         },
@@ -120,34 +125,37 @@
     },
     "description": {
       "type": [
-        "array",
-        "null"
+        "null",
+        "array"
       ],
       "items": {
-        "type": "object",
+        "type": [
+          "null",
+          "object"
+        ],
         "properties": {
           "type": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           },
           "text": {
             "type": [
-              "object",
-              "null"
+              "null",
+              "object"
             ],
             "properties": {
               "content": {
                 "type": [
-                  "string",
-                  "null"
+                  "null",
+                  "string"
                 ]
               },
               "link": {
                 "type": [
-                  "string",
-                  "null"
+                  "null",
+                  "string"
                 ]
               }
             },
@@ -155,14 +163,14 @@
           },
           "plain_text": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           },
           "href": {
             "type": [
-              "string",
-              "null"
+              "null",
+              "string"
             ]
           }
         },
@@ -171,20 +179,20 @@
     },
     "icon": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ],
       "properties": {
         "type": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "emoji": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         }
       },
@@ -192,26 +200,26 @@
     },
     "cover": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ],
       "properties": {
         "type": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "external": {
           "type": [
-            "object",
-            "null"
+            "null",
+            "object"
           ],
           "properties": {
             "url": {
               "type": [
-                "string",
-                "null"
+                "null",
+                "string"
               ]
             }
           },
@@ -222,26 +230,26 @@
     },
     "properties": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ]
     },
     "parent": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "object"
       ],
       "properties": {
         "type": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "page_id": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         }
       },
@@ -249,32 +257,32 @@
     },
     "url": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
       ]
     },
     "archived": {
       "type": [
-        "boolean",
-        "null"
+        "null",
+        "boolean"
       ]
     },
     "in_trash": {
       "type": [
-        "boolean",
-        "null"
+        "null",
+        "boolean"
       ]
     },
     "is_inline": {
       "type": [
-        "boolean",
-        "null"
+        "null",
+        "boolean"
       ]
     },
     "public_url": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
       ]
     }
   },
