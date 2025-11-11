@@ -17,7 +17,30 @@
             "type": [
                 "object",
                 "null"
-            ]
+            ],
+            "properties": {
+                "type": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "external": {
+                    "type": [
+                        "object",
+                        "null"
+                    ],
+                    "properties": {
+                        "url": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "uri"
+                        }
+                    }
+                }
+            }
         },
         "icon": {
             "type": [
