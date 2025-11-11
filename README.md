@@ -46,7 +46,7 @@ This tap:
 
 **[data_sources](https://developers.notion.com/reference/retrieve-a-data-source)**
 - Primary keys: ['id']
-- Replication strategy: FULL_TABLE
+- Replication strategy: INCREMENTAL
 
 **[users](https://developers.notion.com/reference/get-users)**
 - Data Key = results
