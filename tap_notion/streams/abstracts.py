@@ -29,7 +29,7 @@ class BaseStream(ABC):
     path = ""
     page_size = 100
     next_page_key = "next_cursor"
-    headers = {'Authorization': 'Bearer TOKEN_PLACEHOLDER', 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json'}
+    headers = {'Authorization': 'Bearer TOKEN_PLACEHOLDER', 'Notion-Version': '2025-09-03', 'Content-Type': 'application/json'}
     children = []
     parent = ""
     data_key = ""

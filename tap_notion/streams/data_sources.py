@@ -6,16 +6,16 @@ from tap_notion.streams.abstracts import IncrementalStream
 LOGGER = get_logger()
 
 
-class Databases(IncrementalStream):
-    tap_stream_id = "databases"
+class DataSources(IncrementalStream):
+    tap_stream_id = "data_sources"
     key_properties = ["id"]
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
 
     def build_payload(self, next_cursor: Optional[str] = None) -> dict:
-        """Build request payload for Notion /search API to fetch databases."""
+        """Build request payload for Notion /data_sources API."""
         payload = {
-            "filter": {"property": "object", "value": "database"},
+            "filter": {"property": "object", "value": "data_source"},
             "page_size": self.page_size,
         }
         if next_cursor:
@@ -23,7 +23,7 @@ class Databases(IncrementalStream):
         return payload
 
     def get_records(self, parent_obj: Dict = None, state: Dict = None) -> Iterator[Dict]:
-        """Fetch database records incrementally using /search API."""
+        """Fetch data sources incrementally."""
         url = f"{self.client.base_url}/search"
         has_more, next_cursor = True, None
 
