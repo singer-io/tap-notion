@@ -12,6 +12,7 @@ from singer import (
 )
 
 LOGGER = get_logger()
+NOTION_VERSION = '2025-09-03'
 
 
 class BaseStream(ABC):
@@ -29,7 +30,7 @@ class BaseStream(ABC):
     path = ""
     page_size = 100
     next_page_key = "next_cursor"
-    headers = {'Authorization': 'Bearer TOKEN_PLACEHOLDER', 'Notion-Version': '2025-09-03', 'Content-Type': 'application/json'}
+    headers = {"Authorization": "Bearer TOKEN_PLACEHOLDER", "Notion-Version": NOTION_VERSION, "Content-Type": "application/json"}
     children = []
     parent = ""
     data_key = ""
