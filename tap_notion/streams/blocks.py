@@ -15,6 +15,13 @@ class Blocks(IncrementalStream):
     parent = "pages"
     children = ['block_children','comments']
     bookmark_value = None
+    
+    def update_params(self, **kwargs) -> None:
+        """
+        Update params for the stream
+        """
+        kwargs ={}
+        self.params.update(kwargs)
 
     def get_bookmark(self, state: Dict, key: Any = None) -> int:
         """
@@ -24,3 +31,11 @@ class Blocks(IncrementalStream):
             self.bookmark_value = super().get_bookmark(state, key)
 
         return self.bookmark_value
+    
+    def get_url_endpoint(self, parent_obj: Dict = None) -> str:
+        if not parent_obj:
+            raise ValueError("Parent object required to build blocks URL")
+
+        page_id = parent_obj.get("page_id") or parent_obj.get("id")
+
+        return f"{self.client.base_url}/{self.path.format(page_id=page_id)}"

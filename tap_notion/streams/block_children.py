@@ -19,7 +19,7 @@ class BlockChildren(FullTableStream):
         if not parent_obj:
             raise ValueError("Parent object required to build BlockChildren URL")
 
-        block_id = parent_obj.get("block_id") or parent_obj.get("id")
+        block_id = parent_obj.get("id")
         if not block_id:
             raise ValueError("Missing 'id' in parent object for BlockChildren.")
 

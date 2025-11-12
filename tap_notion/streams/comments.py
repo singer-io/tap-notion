@@ -13,10 +13,12 @@ class Comments(IncrementalStream):
     path = "comments"
 
     def get_url_endpoint(self, parent_obj: Dict = None) -> str:
-        """Return the comments endpoint with block_id as a query param."""
-        block_id = parent_obj.get("id")
-        if not block_id:
-            raise ValueError("Missing 'id' in parent object for Comments stream.")
+        """
+        Constructs the API endpoint URL for fetching comments
+        using the parent block's id dynamically.
+        """
+        if parent_obj is None or "id" not in parent_obj:
+            raise ValueError("Parent object must have an 'id' key")
 
+        block_id = parent_obj["id"]
         return f"{self.client.base_url}/{self.path}?block_id={block_id}"
-

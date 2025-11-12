@@ -52,12 +52,35 @@
                 "null"
               ]
             }
-          },
-          "additionalProperties": false
+          }
+        },
+        "workspace_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "workspace_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "workspace_limits": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "max_file_upload_size_in_bytes": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          }
         }
-      },
-      "additionalProperties": false
+      }
     }
-  },
-  "additionalProperties": false
+  }
 }

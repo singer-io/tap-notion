@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Tuple, List, Optional
+from typing import Any, Dict, Tuple, List, Optional, Iterator
 from singer import (
     Transformer,
     get_bookmark,
@@ -42,6 +42,13 @@ class BaseStream(ABC):
         self.schema = catalog.schema.to_dict() if catalog else {}
         self.metadata = metadata.to_map(catalog.metadata) if catalog else {}
         self.params = {}
+        
+        token = self.client.config.get("auth_token", None) if self.client is not None else None
+        self.headers = {
+            "Authorization": f"Bearer {token}",
+            "Notion-Version": NOTION_VERSION,
+            "Content-Type": "application/json",
+        }
 
         self.child_to_sync = []
 
@@ -101,7 +108,7 @@ class BaseStream(ABC):
          - https://github.com/singer-io/getting-started/blob/master/docs/SYNC_MODE.md
         """
 
-    def get_records(self, parent_obj: Dict = None) -> List:
+    def get_records(self, parent_obj: Dict = None) -> Iterator:
         """
         Fetch records from the API. Optionally takes a parent_obj when called from a child stream.
         """
