@@ -10,3 +10,4 @@ class FileUpload(IncrementalStream):
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
     path = "file_uploads"
+    data_key = "results"

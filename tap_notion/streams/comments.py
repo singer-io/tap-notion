@@ -11,6 +11,7 @@ class Comments(IncrementalStream):
     replication_method = "INCREMENTAL"
     parent = "blocks"
     path = "comments"
+    data_key = "results"
 
     def get_url_endpoint(self, parent_obj: Dict = None) -> str:
         """
