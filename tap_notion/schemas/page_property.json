@@ -3,7 +3,8 @@
   "properties": {
     "page_id": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "id": {
