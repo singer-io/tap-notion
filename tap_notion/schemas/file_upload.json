@@ -31,7 +31,7 @@
         "null"
       ],
       "properties": {
-        "object": {
+        "type": {
           "type": [
             "string",
             "null"
@@ -43,64 +43,50 @@
             "null"
           ]
         }
-      },
-      "additionalProperties": false
+      }
     },
-    "file": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "url": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "expiry_time": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date-time"
-        }
-      },
-      "additionalProperties": false
-    },
-    "name": {
+    "filename": {
       "type": [
         "string",
         "null"
       ]
     },
-    "type": {
+    "content_type": {
       "type": [
         "string",
         "null"
       ]
     },
-    "parent": {
+    "expiry_time": {
       "type": [
-        "object",
+        "string",
         "null"
       ],
-      "properties": {
-        "type": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "page_id": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
-      "additionalProperties": false
+      "format": "date-time"
+    },
+    "upload_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "archived": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "content_length": {
+      "type": [
+        "integer",
+        "null"
+      ]
     }
-  },
-  "additionalProperties": false
+  }
 }
