@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, List, Optional, Iterator
+from tap_notion.client import NOTION_VERSION
 from singer import (
     Transformer,
     get_bookmark,
@@ -12,7 +13,6 @@ from singer import (
 )
 
 LOGGER = get_logger()
-NOTION_VERSION = '2025-09-03'
 
 
 class BaseStream(ABC):
@@ -30,7 +30,6 @@ class BaseStream(ABC):
     path = ""
     page_size = 100
     next_page_key = "next_cursor"
-    headers = {"Authorization": "Bearer TOKEN_PLACEHOLDER", "Notion-Version": NOTION_VERSION, "Content-Type": "application/json"}
     children = []
     parent = ""
     data_key = ""
