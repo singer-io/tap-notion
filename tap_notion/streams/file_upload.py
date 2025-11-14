@@ -10,6 +10,4 @@ class FileUpload(IncrementalStream):
     replication_keys = ["last_edited_time"]
     replication_method = "INCREMENTAL"
     path = "file_uploads"
-
-    def parse_response(self, response):
-        yield from response.json().get("results", [])
+    data_key = "results"

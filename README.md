@@ -10,7 +10,7 @@ This tap:
 - Extracts the following resources:
     - [Pages](https://developers.notion.com/reference/retrieve-a-page)
 
-    - [Databases](https://developers.notion.com/reference/retrieve-a-database)
+    - [Data Sources](https://developers.notion.com/reference/retrieve-a-data-source)
 
     - [Users](https://developers.notion.com/reference/get-users)
 
@@ -44,9 +44,9 @@ This tap:
 - Primary keys: ['id']
 - Replication strategy: INCREMENTAL
 
-**[databases](https://developers.notion.com/reference/retrieve-a-database)**
+**[data_sources](https://developers.notion.com/reference/retrieve-a-data-source)**
 - Primary keys: ['id']
-- Replication strategy: FULL_TABLE
+- Replication strategy: INCREMENTAL
 
 **[users](https://developers.notion.com/reference/get-users)**
 - Data Key = results
@@ -116,28 +116,23 @@ This tap:
 
 3. Create your tap's `config.json` file.  The tap config file for this tap should include these entries:
    - `start_date` - the default value to use if no bookmark exists for an endpoint (rfc3339 date string)
-   - `auth_token` (string): Required to get the response from the api
-   - `database_ids` (String): Required For database api's
-   - `request_timeout` (integer, `300`): Max time for which request should wait to get a response. Default request_timeout is 300 seconds.
+   - `auth_token` (string): Required to get the response from the api.
    
     ```json
     {
         "auth_token": "auth token",
-        "start_date": "2023-01-01T00:00:00Z",
-        "database_ids":"DBid",
-        "request_timeout": 300,
-        ...
+        "start_date": "2023-01-01T00:00:00Z"
     }```
 
     Optionally, also create a `state.json` file. `currently_syncing` is an optional attribute used for identifying the last object to be synced in case the job is interrupted mid-stream. The next run would begin where the last job left off.
 
     ```json
     {
-        "currently_syncing": "engage",
+        "currently_syncing": "pages",
         "bookmarks": {
-            "export": "2019-09-27T22:34:39.000000Z",
-            "funnels": "2019-09-28T15:30:26.000000Z",
-            "revenue": "2019-09-28T18:23:53Z"
+            "users": "2019-09-27T22:34:39.000000Z",
+            "blocks": "2019-09-28T15:30:26.000000Z",
+            "comments": "2019-09-28T18:23:53Z"
         }
     }
     ```

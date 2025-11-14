@@ -14,6 +14,7 @@ from tap_notion.exceptions import (
 
 LOGGER = get_logger()
 REQUEST_TIMEOUT = 300
+NOTION_VERSION = '2025-09-03'
 
 
 def raise_for_error(response: requests.Response) -> None:
@@ -74,14 +75,14 @@ class Client:
     def headers(self) -> Dict[str, str]:
         return {
             "Authorization": f"Bearer {self.config['auth_token']}",
-            "Notion-Version": "2022-06-28",
+            "Notion-Version": NOTION_VERSION,
             "Content-Type": "application/json"
         }
 
     def authenticate(self, headers: Dict, params: Dict) -> Tuple[Dict, Dict]:
         """Injects authorization + Notion version headers"""
         headers["Authorization"] = f"Bearer {self.config['auth_token']}"
-        headers["Notion-Version"] = "2022-06-28"
+        headers["Notion-Version"] = NOTION_VERSION
         return headers, params
 
     def get(self, endpoint: str, params: Dict, headers: Dict, path: str = None) -> Any:

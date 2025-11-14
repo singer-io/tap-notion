@@ -3,17 +3,20 @@
   "properties": {
     "object": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "id": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "type": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "name": {

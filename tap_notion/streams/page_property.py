@@ -37,20 +37,16 @@ class PageProperty(FullTableStream):
         total_properties = 0
 
         for prop_name, prop_info in page_data.get("properties", {}).items():
-            prop_id = prop_info.get("id")
-            if not prop_id:
-                continue
+            if prop_name == "Priority":
+                prop_id = prop_info.get("id")
+                if not prop_id:
+                    continue
 
-            prop_url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
-            prop_data = self.client.get(prop_url, params={}, headers=self.client.headers)
+                prop_url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
+                prop_data = self.client.get(prop_url, params={}, headers=self.client.headers)
 
-            yield {
-                "page_id": page_id,
-                "property_name": prop_name,
-                "property_id": prop_id,
-                "property_data": prop_data,
-            }
-            total_properties += 1
+                yield prop_data
+                total_properties += 1
 
         LOGGER.info(
             f"FINISHED Fetching properties for page {page_id}, total_properties: {total_properties}"

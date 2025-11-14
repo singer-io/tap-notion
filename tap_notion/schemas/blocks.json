@@ -3,12 +3,14 @@
   "properties": {
     "object": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "id": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "parent": {

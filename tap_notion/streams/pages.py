@@ -9,7 +9,7 @@ class Pages(IncrementalStream):
     tap_stream_id = "pages"
     key_properties = ["id"]
     parent = None
-    children = ["page_property"]
+    children = ["blocks", "page_property"]
     replication_method = "INCREMENTAL"
     replication_keys = ["last_edited_time"]
 

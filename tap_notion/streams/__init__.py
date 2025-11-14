@@ -1,5 +1,5 @@
 from tap_notion.streams.pages import Pages
-from tap_notion.streams.databases import Databases
+from tap_notion.streams.data_sources import DataSources
 from tap_notion.streams.users import Users
 from tap_notion.streams.blocks import Blocks
 from tap_notion.streams.comments import Comments
@@ -10,7 +10,7 @@ from tap_notion.streams.page_property import PageProperty
 
 STREAMS = {
     "pages": Pages,
-    "databases": Databases,
+    "data_sources": DataSources,
     "users": Users,
     "blocks": Blocks,
     "comments": Comments,
