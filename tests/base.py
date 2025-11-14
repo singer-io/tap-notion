@@ -60,6 +60,41 @@ class NotionBaseTest(BaseCase):
                 cls.REPLICATION_KEYS: { "last_edited_time" },
                 cls.OBEYS_START_DATE: False,
                 cls.API_LIMIT: 100
+            },
+            "block_children": {
+                cls.PRIMARY_KEYS: { "id" },
+                cls.REPLICATION_METHOD: cls.FULL_TABLE,
+                cls.REPLICATION_KEYS:  set(),
+                cls.OBEYS_START_DATE: False,
+                cls.API_LIMIT: 100
+            },
+            "bot_user": {
+                cls.PRIMARY_KEYS: { "id" },
+                cls.REPLICATION_METHOD: cls.FULL_TABLE,
+                cls.REPLICATION_KEYS:  set(),
+                cls.OBEYS_START_DATE: False,
+                cls.API_LIMIT: 100
+            },
+            "comments": {
+                cls.PRIMARY_KEYS: { "id" },
+                cls.REPLICATION_METHOD: cls.INCREMENTAL,
+                cls.REPLICATION_KEYS: { "last_edited_time" },
+                cls.OBEYS_START_DATE: False,
+                cls.API_LIMIT: 100
+            },
+            "file_upload": {
+                cls.PRIMARY_KEYS: { "id" },
+                cls.REPLICATION_METHOD: cls.INCREMENTAL,
+                cls.REPLICATION_KEYS: { "last_edited_time" },
+                cls.OBEYS_START_DATE: False,
+                cls.API_LIMIT: 100
+            },
+            "page_property": {
+                cls.PRIMARY_KEYS: { "id" },
+                cls.REPLICATION_METHOD: cls.FULL_TABLE,
+                cls.REPLICATION_KEYS:  set(),
+                cls.OBEYS_START_DATE: False,
+                cls.API_LIMIT: 100
             }
         }
 

@@ -15,7 +15,8 @@
     },
     "type": {
       "type": [
-        "string"
+        "string",
+        "null"
       ]
     },
     "name": {

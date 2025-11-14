@@ -66,12 +66,6 @@
       ],
       "format": "date-time"
     },
-    "upload_url": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
     "archived": {
       "type": [
         "boolean",
