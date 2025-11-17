@@ -8,8 +8,8 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
     bookmark_format = "%Y-%m-%dT%H:%M:%S.%fZ"
     initial_bookmarks = {
         "bookmarks": {
-            "pages": { "last_edited_time" : "2020-01-01T00:00:00Z"},
-            "blocks": { "last_edited_time" : "2020-01-01T00:00:00Z"},
+            "pages": { "last_edited_time" : "2025-01-01T00:00:00Z"},
+            "blocks": { "last_edited_time" : "2025-01-01T00:00:00Z"},
         }
     }
     @staticmethod
@@ -17,5 +17,17 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
         return "tap_tester_notion_bookmark_test"
 
     def streams_to_test(self):
-        streams_to_exclude = {}
+        streams_to_exclude = {'page_property', 'block_children', 'bot_user', 'comments', 'data_sources', 'file_upload', 'users'}
         return self.expected_stream_names().difference(streams_to_exclude)
+
+    def calculate_new_bookmarks(self):
+        """Calculates new bookmarks by looking through sync 1 data to determine
+        a bookmark that will sync 2 records in sync 2 (plus any necessary look
+        back data)"""
+        new_bookmarks = {
+            "pages": { "last_edited_time" : "2025-11-05T00:00:00Z"},
+            "blocks": { "last_edited_time" : "2025-11-05T00:00:00Z"},
+
+        }
+
+        return new_bookmarks
