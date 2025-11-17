@@ -10,6 +10,7 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
         "bookmarks": {
             "pages": { "last_edited_time" : "2025-01-01T00:00:00Z"},
             "blocks": { "last_edited_time" : "2025-01-01T00:00:00Z"},
+            "file_upload": { "last_edited_time" : "2025-01-01T00:00:00Z"},
         }
     }
     @staticmethod
@@ -17,8 +18,16 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
         return "tap_tester_notion_bookmark_test"
 
     def streams_to_test(self):
-        # excluded streams are either FULL_TABLE or not have the data accordingly.
-        streams_to_exclude = {'page_property', 'block_children', 'bot_user', 'comments', 'data_sources', 'file_upload', 'users'}
+        streams_to_exclude = {
+            # Less data available for streams
+            'comments',
+            'data_sources',
+            # Unsupported Full-Table Streams
+            'page_property',
+            'users',
+            'bot_user',
+            'block_children'
+        }
         return self.expected_stream_names().difference(streams_to_exclude)
 
     def calculate_new_bookmarks(self):
@@ -28,7 +37,7 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
         new_bookmarks = {
             "pages": { "last_edited_time" : "2025-11-05T00:00:00Z"},
             "blocks": { "last_edited_time" : "2025-11-05T00:00:00Z"},
-
+            "file_upload": { "last_edited_time" : "2025-11-15T00:00:00Z"},
         }
 
         return new_bookmarks
