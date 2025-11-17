@@ -102,7 +102,7 @@ class NotionBaseTest(BaseCase):
     def get_credentials():
         """Authentication information for the test account."""
         credentials_dict = {}
-        creds = {'auth_token': 'TAP_NOTION_AUTH_TOKEN', 'notion_version': '2022-06-28'}
+        creds = {'auth_token': 'TAP_NOTION_AUTH_TOKEN'}
 
         for cred in creds:
             credentials_dict[cred] = os.getenv(creds[cred])
