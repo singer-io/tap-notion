@@ -17,6 +17,7 @@ class NotionBookMarkTest(BookmarkTest, NotionBaseTest):
         return "tap_tester_notion_bookmark_test"
 
     def streams_to_test(self):
+        # excluded streams are either FULL_TABLE or not have the data accordingly.
         streams_to_exclude = {'page_property', 'block_children', 'bot_user', 'comments', 'data_sources', 'file_upload', 'users'}
         return self.expected_stream_names().difference(streams_to_exclude)
 
