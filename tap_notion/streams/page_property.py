@@ -26,6 +26,43 @@ class PageProperty(FullTableStream):
 
         return f"{self.client.base_url}/{self.path.format(page_id=page_id, property_id=property_id)}"
 
+    def fetch_property_items(self, first_url: str) -> Iterator[Dict]:
+        """
+        Handles:
+        - object = property_item (simple)
+        - object = list (paginated)
+        """
+
+        url = first_url
+        params = {}
+
+        while True:
+            response = self.client.get(url, params=params, headers=self.client.headers)
+
+            if response.get("object") == "property_item":
+                yield response
+                return
+
+            if response.get("object") == "list":
+                for item in response.get("results", []):
+                    yield item
+
+                if not response.get("has_more"):
+                    return
+
+                next_url = response.get("next_url")
+                next_cursor = response.get("next_cursor")
+
+                if next_url:
+                    url = next_url
+                    params = {}
+                else:
+                    params = {"start_cursor": next_cursor}
+
+            else:
+                LOGGER.warning(f"Unknown Notion response type: {response}")
+                return
+
     def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
         if not parent_obj:
             raise ValueError("PageProperty must be run as a child of Pages stream")
@@ -33,21 +70,20 @@ class PageProperty(FullTableStream):
         page_id = parent_obj["id"]
         LOGGER.info(f"START Fetching properties for page {page_id}")
 
-        page_data = parent_obj
         total_properties = 0
 
-        for prop_name, prop_info in page_data.get("properties", {}).items():
-            if prop_name == "Priority":
-                prop_id = prop_info.get("id")
-                if not prop_id:
-                    continue
+        for prop_name, prop_info in parent_obj.get("properties", {}).items():
+            
+            prop_id = prop_info.get("id")
+            if not prop_id:
+                continue
 
-                prop_url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
-                prop_data = self.client.get(prop_url, params={}, headers=self.client.headers)
+            url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
 
-                yield prop_data
+            for prop_item in self.fetch_property_items(url):
+                yield prop_item
                 total_properties += 1
 
         LOGGER.info(
-            f"FINISHED Fetching properties for page {page_id}, total_properties: {total_properties}"
+            f"FINISHED Fetching properties for page {page_id}, total_items_fetched: {total_properties}"
         )
