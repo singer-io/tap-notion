@@ -73,7 +73,6 @@ class PageProperty(FullTableStream):
         total_properties = 0
 
         for prop_name, prop_info in parent_obj.get("properties", {}).items():
-            
             prop_id = prop_info.get("id")
             if not prop_id:
                 continue
