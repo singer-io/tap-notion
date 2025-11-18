@@ -7,7 +7,7 @@ LOGGER = get_logger()
 
 class Blocks(IncrementalStream):
     tap_stream_id = "blocks"
-    key_properties = ["id"]
+    key_properties = ["id", "page_id"]
     replication_method = "INCREMENTAL"
     replication_keys = ["last_edited_time"]
     data_key = "results"
@@ -39,3 +39,12 @@ class Blocks(IncrementalStream):
         page_id = parent_obj.get("page_id") or parent_obj.get("id")
 
         return f"{self.client.base_url}/{self.path.format(page_id=page_id)}"
+
+
+    def modify_object(self, record: Dict, parent_record: Dict = None) -> Dict:
+            """
+            Modify the record before writing to the stream
+            """
+            if parent_record:
+                record["page_id"] = parent_record.get("id")
+            return record

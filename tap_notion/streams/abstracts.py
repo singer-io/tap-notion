@@ -250,6 +250,7 @@ class FullTableStream(BaseStream):
         self.url_endpoint = self.get_url_endpoint(parent_obj)
         with metrics.record_counter(self.tap_stream_id) as counter:
             for record in self.get_records(parent_obj=parent_obj):
+                record = self.modify_object(record, parent_obj)
                 transformed_record = transformer.transform(
                     record, self.schema, self.metadata
                 )

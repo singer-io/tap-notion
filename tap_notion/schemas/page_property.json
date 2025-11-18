@@ -1,40 +1,172 @@
 {
   "type": "object",
   "properties": {
+    "object": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
     "id": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
+      ]
+    },
+    "page_id": {
+      "type": [
+        "null",
+        "string"
       ]
     },
     "type": {
       "type": [
-        "string",
-        "null"
+        "null",
+        "string"
       ]
     },
-    "select": {
+    "number": {
       "type": [
-        "object",
-        "null"
+        "null",
+        "integer"
+      ]
+    },
+    "relation": {
+      "type": [
+        "null",
+        "object"
       ],
       "properties": {
         "id": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "rich_text": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "type": {
+          "type": [
+            "null",
+            "string"
           ]
         },
-        "name": {
+        "text": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "object"
+          ],
+          "properties": {
+            "content": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "link": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "url": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "mention": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "type": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "page": {
+              "type": [
+                "null",
+                "object"
+              ],
+              "properties": {
+                "id": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "annotations": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "bold": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "italic": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "strikethrough": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "underline": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "code": {
+              "type": [
+                "null",
+                "boolean"
+              ]
+            },
+            "color": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        },
+        "plain_text": {
+          "type": [
+            "null",
+            "string"
           ]
         },
-        "color": {
+        "href": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         }
       }
