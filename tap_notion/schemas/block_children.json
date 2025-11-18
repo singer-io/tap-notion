@@ -7,6 +7,12 @@
         "null"
       ]
     },
+    "block_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "parent": {
       "type": [
         "object",

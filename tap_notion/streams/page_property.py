@@ -7,7 +7,7 @@ LOGGER = get_logger()
 
 class PageProperty(FullTableStream):
     tap_stream_id = "page_property"
-    key_properties = ["id"]
+    key_properties = ["id", "page_id"]
     replication_method = "FULL_TABLE"
     replication_keys = []
     parent = "pages"
@@ -80,7 +80,7 @@ class PageProperty(FullTableStream):
             url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
 
             for prop_item in self.fetch_property_items(url):
-                prop_item["parent_id"] = page_id
+                prop_item["page_id"] = page_id
                 yield prop_item
                 total_properties += 1
 

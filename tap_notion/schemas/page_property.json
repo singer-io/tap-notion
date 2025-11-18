@@ -13,7 +13,7 @@
         "string"
       ]
     },
-    "parent_id": {
+    "page_id": {
       "type": [
         "null",
         "string"

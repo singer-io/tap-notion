@@ -6,7 +6,7 @@ LOGGER = get_logger()
 
 class BlockChildren(FullTableStream):
     tap_stream_id = "block_children"
-    key_properties = ["id"]
+    key_properties = ["id", "block_id"]
     replication_keys = []
     replication_method = "FULL_TABLE"
     data_key = "results"
@@ -25,3 +25,11 @@ class BlockChildren(FullTableStream):
             raise ValueError("Missing 'id' in parent object for BlockChildren.")
 
         return f"{self.client.base_url}/{self.path.format(block_id=block_id)}"
+    
+    def modify_object(self, record: Dict, parent_record: Dict = None) -> Dict:
+            """
+            Modify the record before writing to the stream
+            """
+            if parent_record:
+                record["block_id"] = parent_record.get("id")
+            return record
