@@ -80,6 +80,7 @@ class PageProperty(FullTableStream):
             url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
 
             for prop_item in self.fetch_property_items(url):
+                prop_item["parent_id"] = page_id
                 yield prop_item
                 total_properties += 1
 

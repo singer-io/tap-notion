@@ -13,6 +13,12 @@
         "string"
       ]
     },
+    "parent_id": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
     "type": {
       "type": [
         "null",
