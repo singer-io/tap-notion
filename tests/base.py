@@ -59,14 +59,16 @@ class NotionBaseTest(BaseCase):
                 cls.REPLICATION_METHOD: cls.INCREMENTAL,
                 cls.REPLICATION_KEYS: { "last_edited_time" },
                 cls.OBEYS_START_DATE: False,
-                cls.API_LIMIT: 100
+                cls.API_LIMIT: 100,
+                cls.PARENT_STREAM: "pages"
             },
             "block_children": {
                 cls.PRIMARY_KEYS: { "id", "block_id" },
                 cls.REPLICATION_METHOD: cls.FULL_TABLE,
                 cls.REPLICATION_KEYS:  set(),
                 cls.OBEYS_START_DATE: False,
-                cls.API_LIMIT: 100
+                cls.API_LIMIT: 100,
+                cls.PARENT_STREAM: "blocks"
             },
             "bot_user": {
                 cls.PRIMARY_KEYS: { "id" },
@@ -80,7 +82,8 @@ class NotionBaseTest(BaseCase):
                 cls.REPLICATION_METHOD: cls.INCREMENTAL,
                 cls.REPLICATION_KEYS: { "last_edited_time" },
                 cls.OBEYS_START_DATE: False,
-                cls.API_LIMIT: 100
+                cls.API_LIMIT: 100,
+                cls.PARENT_STREAM: "blocks"
             },
             "file_upload": {
                 cls.PRIMARY_KEYS: { "id" },
@@ -94,7 +97,8 @@ class NotionBaseTest(BaseCase):
                 cls.REPLICATION_METHOD: cls.FULL_TABLE,
                 cls.REPLICATION_KEYS:  set(),
                 cls.OBEYS_START_DATE: False,
-                cls.API_LIMIT: 100
+                cls.API_LIMIT: 100,
+                cls.PARENT_STREAM: "pages"
             }
         }
 
