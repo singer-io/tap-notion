@@ -27,9 +27,9 @@ class BlockChildren(FullTableStream):
         return f"{self.client.base_url}/{self.path.format(block_id=block_id)}"
     
     def modify_object(self, record: Dict, parent_record: Dict = None) -> Dict:
-            """
-            Modify the record before writing to the stream
-            """
-            if parent_record:
-                record["block_id"] = parent_record.get("id")
-            return record
+        """
+        Modify the record before writing to the stream
+        """
+        if parent_record:
+            record["block_id"] = parent_record.get("id")
+        return record
