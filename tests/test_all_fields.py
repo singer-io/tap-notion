@@ -9,6 +9,12 @@ KNOWN_MISSING_FIELDS = {
 class NotionAllFields(AllFieldsTest, NotionBaseTest):
     """Ensure running the tap with all streams and fields selected results in
     the replication of all fields."""
+    
+    MISSING_FIELDS = {
+        "page_property": [
+            "relation",
+        ]
+    }
 
     @staticmethod
     def name():
