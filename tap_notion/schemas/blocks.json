@@ -13,6 +13,12 @@
         "null"
       ]
     },
+    "page_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "parent": {
       "type": [
         "object",
