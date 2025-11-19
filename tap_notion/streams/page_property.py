@@ -26,7 +26,7 @@ class PageProperty(FullTableStream):
 
         return f"{self.client.base_url}/{self.path.format(page_id=page_id, property_id=property_id)}"
 
-    def fetch_property_items(self, first_url: str) -> Iterator[Dict]:
+    def fetch_property_items(self, first_url: str, page_id: str, property_id: str) -> Iterator[Dict]:
         """
         Handles:
         - object = property_item (simple)
@@ -35,33 +35,38 @@ class PageProperty(FullTableStream):
 
         url = first_url
         params = {}
+        more_pages = True
 
-        while True:
+        while more_pages:
             response = self.client.get(url, params=params, headers=self.client.headers)
 
-            if response.get("object") == "property_item":
-                yield response
-                return
+            obj_type = response.get("object")
 
-            if response.get("object") == "list":
+            if obj_type == "property_item":
+                yield response
+                more_pages = False
+
+            elif obj_type == "list":
                 for item in response.get("results", []):
                     yield item
 
-                if not response.get("has_more"):
-                    return
+                if response.get("has_more"):
+                    next_url = response.get("next_url")
+                    next_cursor = response.get("next_cursor")
 
-                next_url = response.get("next_url")
-                next_cursor = response.get("next_cursor")
-
-                if next_url:
-                    url = next_url
-                    params = {}
+                    if next_url:
+                        url = next_url
+                        params = {}
+                    else:
+                        params = {"start_cursor": next_cursor}
                 else:
-                    params = {"start_cursor": next_cursor}
+                    more_pages = False
 
             else:
-                LOGGER.warning(f"Unknown Notion response type: {response}")
-                return
+                LOGGER.warning(
+                f"Unknown Notion response for page_id={page_id}, property_id={property_id}"
+            )
+                more_pages = False
 
     def get_records(self, parent_obj: Dict = None) -> Iterator[Dict]:
         if not parent_obj:
@@ -79,7 +84,7 @@ class PageProperty(FullTableStream):
 
             url = self.get_url_endpoint({"page_id": page_id, "property_id": prop_id})
 
-            for prop_item in self.fetch_property_items(url):
+            for prop_item in self.fetch_property_items(url, page_id=page_id, property_id=prop_id):
                 prop_item["page_id"] = page_id
                 yield prop_item
                 total_properties += 1
