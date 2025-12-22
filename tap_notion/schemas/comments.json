@@ -1,6 +1,5 @@
 {
   "type": "object",
-  "additionalProperties": false,
   "properties": {
     "object": {
       "type": [
@@ -25,7 +24,6 @@
         "object",
         "null"
       ],
-      "additionalProperties": false,
       "properties": {
         "type": {
           "type": [
@@ -78,7 +76,6 @@
         "object",
         "null"
       ],
-      "additionalProperties": false,
       "properties": {
         "object": {
           "type": [
@@ -101,7 +98,6 @@
       ],
       "items": {
         "type": "object",
-        "additionalProperties": false,
         "properties": {
           "type": {
             "type": [
@@ -126,7 +122,6 @@
               "object",
               "null"
             ],
-            "additionalProperties": false,
             "properties": {
               "bold": {
                 "type": [
@@ -171,7 +166,6 @@
               "object",
               "null"
             ],
-            "additionalProperties": false,
             "properties": {
               "content": {
                 "type": [
@@ -184,7 +178,6 @@
                   "object",
                   "null"
                 ],
-                "additionalProperties": false,
                 "properties": {
                   "url": {
                     "type": [
