@@ -87,7 +87,10 @@
         "null"
       ],
       "additionalProperties": {
-        "type": "object",
+        "type": [
+          "object",
+          "null"
+        ],
         "properties": {
           "id": {
             "type": [
@@ -107,9 +110,24 @@
               "null"
             ],
             "items": {
-              "type": "object",
+              "type": [
+                "object",
+                "null"
+              ],
               "properties": {
                 "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "plain_text": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "href": {
                   "type": [
                     "string",
                     "null"
@@ -129,25 +147,193 @@
                     },
                     "link": {
                       "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "annotations": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "bold": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "italic": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "strikethrough": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "underline": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "code": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "color": {
+                      "type": [
                         "string",
                         "null"
                       ]
                     }
                   },
                   "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "rich_text": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
                 },
                 "plain_text": {
                   "type": [
                     "string",
                     "null"
                   ]
+                },
+                "href": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "text": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "content": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "link": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "annotations": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "bold": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "italic": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "strikethrough": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "underline": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "code": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "color": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
                 }
               },
               "additionalProperties": false
             }
+          },
+          "number": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "checkbox": {
+            "type": [
+              "boolean",
+              "null"
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": true
       }
     },
     "parent": {
