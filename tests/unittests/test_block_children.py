@@ -63,7 +63,7 @@ def test_sync_recurses_into_nested_children(mock_write_record, mock_counter, moc
     # First call returns a child block that itself has children
     # Second call (recursive) returns a grandchild with no further children
     mock_client.get.side_effect = [
-        {"results": [{"id": "child-1", "has_children": True}], "next_cursor": None},
+        {"results": [{"id": "child-1", "has_children": True, "parent": {"type": "block_id"}}], "next_cursor": None},
         {"results": [{"id": "grandchild-1", "has_children": False}], "next_cursor": None},
     ]
 
@@ -91,7 +91,7 @@ def test_sync_recurses_into_nested_children(mock_write_record, mock_counter, moc
 def test_sync_grandchild_has_correct_block_id(mock_write_record, mock_counter, mock_catalog, mock_client):
     """Each record's block_id should reference its direct parent, not the top-level parent."""
     mock_client.get.side_effect = [
-        {"results": [{"id": "child-1", "has_children": True}], "next_cursor": None},
+        {"results": [{"id": "child-1", "has_children": True, "parent": {"type": "block_id"}}], "next_cursor": None},
         {"results": [{"id": "grandchild-1", "has_children": False}], "next_cursor": None},
     ]
 
@@ -121,7 +121,7 @@ def test_sync_grandchild_has_correct_block_id(mock_write_record, mock_counter, m
 def test_sync_not_selected_skips_write_but_still_recurses(mock_write_record, mock_counter, mock_catalog, mock_client):
     """Even when the stream is not selected, recursion should still occur (matching base class behavior)."""
     mock_client.get.side_effect = [
-        {"results": [{"id": "child-1", "has_children": True}], "next_cursor": None},
+        {"results": [{"id": "child-1", "has_children": True, "parent": {"type": "block_id"}}], "next_cursor": None},
         {"results": [{"id": "grandchild-1", "has_children": False}], "next_cursor": None},
     ]
 

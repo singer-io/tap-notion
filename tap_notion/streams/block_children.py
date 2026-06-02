@@ -54,6 +54,7 @@ class BlockChildren(FullTableStream):
 
                 is_nested = record.get("parent", {}).get("type") == "block_id"
                 if record.get("has_children") and is_nested:
-                    self.sync(state=state, transformer=transformer, parent_obj=record)
+                    child = BlockChildren(self.client, self.catalog)
+                    child.sync(state=state, transformer=transformer, parent_obj=record)
 
             return counter.value
