@@ -140,3 +140,38 @@ def test_sync_not_selected_skips_write_but_still_recurses(mock_write_record, moc
 
     mock_write_record.assert_not_called()
     assert mock_client.get.call_count == 2
+
+
+@patch("tap_notion.streams.block_children.metrics.record_counter")
+@patch("tap_notion.streams.block_children.write_record")
+def test_sync_recurses_beyond_depth_2(mock_write_record, mock_counter, mock_catalog, mock_client):
+    """Recursion continues past depth 2 — great-grandchildren are also fetched and written."""
+    mock_client.get.side_effect = [
+        {"results": [{"id": "child-1", "has_children": True, "parent": {"type": "block_id"}}], "next_cursor": None},
+        {"results": [{"id": "grandchild-1", "has_children": True, "parent": {"type": "block_id"}}], "next_cursor": None},
+        {"results": [{"id": "great-grandchild-1", "has_children": False}], "next_cursor": None},
+    ]
+
+    counter_inst = MagicMock()
+    counter_inst.__enter__.return_value = counter_inst
+    counter_inst.__exit__.return_value = False
+    counter_inst.value = 1
+    mock_counter.return_value = counter_inst
+
+    stream = BlockChildren(client=mock_client, catalog=mock_catalog)
+    stream.is_selected = MagicMock(return_value=True)
+    transformer = MagicMock()
+    transformer.transform.side_effect = lambda r, s, m: r
+
+    stream.sync(state={}, transformer=transformer, parent_obj={"id": "parent-block"})
+
+    assert mock_write_record.call_count == 3
+    assert mock_client.get.call_count == 3
+
+    written_records = [c.args[1] for c in mock_write_record.call_args_list]
+    ids = [r["id"] for r in written_records]
+    assert ids == ["child-1", "grandchild-1", "great-grandchild-1"]
+
+    assert written_records[0]["block_id"] == "parent-block"
+    assert written_records[1]["block_id"] == "child-1"
+    assert written_records[2]["block_id"] == "grandchild-1"

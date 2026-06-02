@@ -32,16 +32,12 @@ class BlockChildren(FullTableStream):
         """
         if parent_record:
             record["block_id"] = parent_record.get("id")
-        else:
-            record.pop("block_id", None)
         return record
 
     def sync(self, state: Dict, transformer: Transformer, parent_obj: Dict = None) -> int:
         """
         Sync block children. Recursively fetches children for any nested block
-        (parent.type == "block_id"). Blocks whose parent is a page (parent.type == "page_id")
-        are top-level blocks already covered by the Blocks stream and are not recursed into,
-        which prevents duplicate records.
+        (parent.type == "block_id").
         """
         self.url_endpoint = self.get_url_endpoint(parent_obj)
         with metrics.record_counter(self.tap_stream_id) as counter:
@@ -55,6 +51,7 @@ class BlockChildren(FullTableStream):
                 is_nested = record.get("parent", {}).get("type") == "block_id"
                 if record.get("has_children") and is_nested:
                     child = BlockChildren(self.client, self.catalog)
+                    child.is_selected = self.is_selected
                     child.sync(state=state, transformer=transformer, parent_obj=record)
 
             return counter.value
