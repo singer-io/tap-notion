@@ -32,6 +32,8 @@ class BlockChildren(FullTableStream):
         """
         if parent_record:
             record["block_id"] = parent_record.get("id")
+        else:
+            record.pop("block_id", None)
         return record
 
     def sync(self, state: Dict, transformer: Transformer, parent_obj: Dict = None) -> int:
@@ -48,7 +50,11 @@ class BlockChildren(FullTableStream):
                     write_record(self.tap_stream_id, transformed_record)
                     counter.increment()
 
+                for child in self.child_to_sync:
+                    child.sync(state=state, transformer=transformer, parent_obj=record)
+
                 if record.get("has_children"):
-                    self.sync(state=state, transformer=transformer, parent_obj=record)
+                    block = BlockChildren(self.client, self.catalog)
+                    block.sync(state=state, transformer=transformer, parent_obj=record)
 
             return counter.value
