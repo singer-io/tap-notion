@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 setup(name="tap-notion",
-      version="0.0.2",
+      version="0.0.3",
       description="Singer.io tap for extracting data from Notion API",
       author="Stitch",
       url="http://singer.io",
@@ -12,7 +12,7 @@ setup(name="tap-notion",
       py_modules=["tap_notion"],
       install_requires=[
         "singer-python==6.1.1",
-        "requests==2.32.5",
+        "requests==2.33.0",
    
       ],
       extras_require={"dev": ["pylint", "ipdb", "pytest"]},
