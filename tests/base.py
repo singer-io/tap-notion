@@ -27,7 +27,7 @@ class NotionBaseTest(BaseCase):
     @staticmethod
     def get_type():
         """The name of the tap."""
-        return "platform.notion"
+        return "webhook.notion"
 
     @classmethod
     def expected_metadata(cls):
