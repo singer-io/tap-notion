@@ -18,6 +18,7 @@ class NotionBaseTest(BaseCase):
     in tap-tester tests. Shared tap-specific methods (as needed).
     """    
     start_date = "2019-01-01T00:00:00Z"
+    IS_FORBIDDEN_STREAM = "is_forbidden_stream"
 
     @staticmethod
     def tap_name():
