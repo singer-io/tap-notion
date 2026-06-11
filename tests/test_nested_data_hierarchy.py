@@ -35,7 +35,9 @@ class NotionNestedHierarchyTest(NotionBaseTest):
 
         found_catalogs = self.run_and_verify_check_mode(conn_id)
         streams_to_sync = {"pages", "blocks", "block_children"}
-        test_catalogs = [catalog for catalog in found_catalogs
+        test_catalogs = [
+            catalog
+            for catalog in found_catalogs
             if catalog.get("stream_name") in streams_to_sync
         ]
 
