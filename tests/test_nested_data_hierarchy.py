@@ -47,7 +47,8 @@ class NotionNestedHierarchyTest(NotionBaseTest):
         synced_records = runner.get_records_from_target_output()
 
         def upserts(stream_name):
-            return [msg["data"]
+            return [
+                msg["data"]
                 for msg in synced_records.get(stream_name, {}).get("messages", [])
                 if msg.get("action") == "upsert" and isinstance(msg.get("data"), dict)
             ]
