@@ -71,7 +71,9 @@ class NotionNestedHierarchyTest(NotionBaseTest):
         ]
 
         self.assertGreater(
-            len(page_blocks),0,"Expected at least one block linked to a replicated page.",
+            len(page_blocks),
+            0,
+            "Expected at least one block linked to a replicated page.",
         )
 
         children_by_parent = {}
