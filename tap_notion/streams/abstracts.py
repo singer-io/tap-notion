@@ -193,10 +193,11 @@ class BaseStream(ABC):
                 url = self.get_url_endpoint()
                 self.client.get(url, params={}, headers=self.headers)
             return True
-        except NotionForbiddenError:
+        except NotionForbiddenError as exc:
             LOGGER.warning(
-                "Stream '%s' does not have read permission, excluding from catalog.",
+                "Stream '%s' does not have read permission, excluding from catalog. Detail: %s",
                 self.tap_stream_id,
+                str(exc),
             )
             return False
 

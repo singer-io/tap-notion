@@ -43,16 +43,14 @@ def _apply_access_checks(client, schemas: dict, field_metadata: dict) -> None:
 
     _prune_inaccessible_children(schemas, field_metadata)
 
+    if not schemas:
+        raise NotionForbiddenError(
+            "HTTP-error-code: 403, Error: Credentials lack read access to all supported streams."
+        )
+
     if inaccessible_streams:
-        total_parent_streams = len([s for s in STREAMS.values() if not s.parent])
-        if len(inaccessible_streams) == total_parent_streams:
-            raise NotionForbiddenError(
-                "HTTP-error-code: 403, Error: The account credentials supplied do not have 'read' access to any "
-                "of the streams supported by the tap. Data collection cannot be initiated due to lack of permissions."
-            )
         LOGGER.warning(
-            "The account credentials supplied do not have 'read' access to the following stream(s): %s. "
-            "These streams have been excluded from the catalog.",
+            "These streams have been excluded due to 403 Forbidden: %s",
             ", ".join(inaccessible_streams),
         )
 
