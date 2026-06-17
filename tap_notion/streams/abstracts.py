@@ -195,7 +195,7 @@ class BaseStream(ABC):
             return True
         except NotionForbiddenError as exc:
             LOGGER.warning(
-                "Stream '%s' does not have read permission, excluding from catalog. Detail: %s",
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message:'%s'",
                 self.tap_stream_id,
                 str(exc),
             )

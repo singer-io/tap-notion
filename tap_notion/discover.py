@@ -45,12 +45,12 @@ def _apply_access_checks(client, schemas: dict, field_metadata: dict) -> None:
 
     if not schemas:
         raise NotionForbiddenError(
-            "HTTP-error-code: 403, Error: Credentials lack read access to all supported streams."
+            "No streams are accessible. Ensure the credentials have read permission for at least one stream."
         )
 
     if inaccessible_streams:
         LOGGER.warning(
-            "These streams have been excluded due to 403 Forbidden: %s",
+            "These streams have been excluded due to HTTP-Error-Code:403 Forbidden: %s",
             ", ".join(inaccessible_streams),
         )
 
