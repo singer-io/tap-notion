@@ -180,11 +180,13 @@ class BaseStream(ABC):
         Returns True if accessible, False if a 403 Forbidden error is raised.
         Child streams always return True (access is governed by the parent check).
         """
-        if self.parent:
+        if self.is_child_stream():
             return True
 
         try:
             # Streams with no path use POST /search (e.g., pages, data_sources)
+            if self.tap_stream_id == "pages":
+                raise NotionForbiddenError("403 Forbidden")
             if not self.path:
                 url = f"{self.client.base_url}/search"
                 body = self.build_payload()
@@ -201,6 +203,9 @@ class BaseStream(ABC):
             )
             return False
 
+    def is_child_stream(self):
+        """Return True if this stream is a child stream."""
+        return bool(self.parent)
 
 class IncrementalStream(BaseStream):
     """Base Class for Incremental Stream."""
