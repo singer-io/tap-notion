@@ -185,8 +185,6 @@ class BaseStream(ABC):
 
         try:
             # Streams with no path use POST /search (e.g., pages, data_sources)
-            if self.tap_stream_id == "pages":
-                raise NotionForbiddenError("403 Forbidden")
             if not self.path:
                 url = f"{self.client.base_url}/search"
                 body = self.build_payload()
