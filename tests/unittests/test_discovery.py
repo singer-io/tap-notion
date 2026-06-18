@@ -71,8 +71,29 @@ class TestApplyAccessChecks:
         mock_client.get.side_effect = NotionForbiddenError("403 Forbidden")
         mock_client.post.side_effect = NotionForbiddenError("403 Forbidden")
 
-        with pytest.raises(NotionForbiddenError):
+        with pytest.raises(
+            NotionForbiddenError,
+            match="No streams are accessible. Ensure the credentials have read permission for at least one stream.",
+        ):
             _apply_access_checks(mock_client, mock_schemas, mock_field_metadata)
+
+    def test_logs_warning_for_excluded_streams(self, mock_client, mock_schemas, mock_field_metadata):
+        """When some streams are excluded, a consolidated warning is logged."""
+        def side_effect_get(url, params, headers, path=None):
+            if "file_uploads" in (url or path or ""):
+                raise NotionForbiddenError("403 Forbidden")
+            return {"results": [], "next_cursor": None}
+
+        mock_client.get.side_effect = side_effect_get
+
+        with patch("tap_notion.discover.LOGGER.warning") as mock_warning:
+            _apply_access_checks(mock_client, mock_schemas, mock_field_metadata)
+
+            assert mock_warning.call_count == 2
+            mock_warning.assert_any_call(
+                "These streams have been excluded due to HTTP-Error-Code:403 Forbidden: %s",
+                "file_upload",
+            )
 
     def test_child_streams_excluded_when_parent_inaccessible(self, mock_client, mock_schemas, mock_field_metadata):
         """Child streams are removed when their parent is excluded."""
@@ -191,3 +212,17 @@ class TestCheckAccess:
         mock_client.get.side_effect = NotionForbiddenError("403 Forbidden")
         stream = Users(client=mock_client)
         assert stream.check_access() is False
+
+    def test_parent_stream_logs_warning_detail_on_403(self, mock_client):
+        """Parent stream logs the exception detail when API returns 403."""
+        from tap_notion.streams.users import Users
+        with patch("tap_notion.streams.abstracts.LOGGER.warning") as mock_warning:
+            mock_client.get.side_effect = NotionForbiddenError("403 Forbidden")
+            stream = Users(client=mock_client)
+
+            assert stream.check_access() is False
+            mock_warning.assert_called_once_with(
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message:'%s'",
+                "users",
+                "403 Forbidden",
+            )
