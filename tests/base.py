@@ -18,6 +18,7 @@ class NotionBaseTest(BaseCase):
     in tap-tester tests. Shared tap-specific methods (as needed).
     """    
     start_date = "2019-01-01T00:00:00Z"
+    IS_FORBIDDEN_STREAM = "is_forbidden_stream"
 
     @staticmethod
     def tap_name():
@@ -117,4 +118,12 @@ class NotionBaseTest(BaseCase):
         """Configuration of properties required for the tap."""
         return {
             "start_date": self.start_date
+        }
+
+    def expected_stream_names(self):
+        """The expected stream names, excludes forbidden streams."""
+        return {
+            stream_name
+            for stream_name, metadata in self.expected_metadata().items()
+            if not metadata.get(self.IS_FORBIDDEN_STREAM, False)
         }

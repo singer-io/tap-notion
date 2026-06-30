@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Tuple, List, Optional, Iterator
 from tap_notion.client import NOTION_VERSION
+from tap_notion.exceptions import NotionForbiddenError
 from singer import (
     Transformer,
     get_bookmark,
@@ -173,6 +174,36 @@ class BaseStream(ABC):
         """
         return self.url_endpoint or f"{self.client.base_url}/{self.path}"
 
+    def check_access(self) -> bool:
+        """
+        Verify that the API credentials have read access to this stream.
+        Returns True if accessible, False if a 403 Forbidden error is raised.
+        Child streams always return True (access is governed by the parent check).
+        """
+        if self.is_child_stream():
+            return True
+
+        try:
+            # Streams with no path use POST /search (e.g., pages, data_sources)
+            if not self.path:
+                url = f"{self.client.base_url}/search"
+                body = self.build_payload()
+                self.client.post(url, headers=self.headers, body=body)
+            else:
+                url = self.get_url_endpoint()
+                self.client.get(url, params={}, headers=self.headers)
+            return True
+        except NotionForbiddenError as exc:
+            LOGGER.warning(
+                "Unauthorized Stream: %s, excluding from catalog. HTTP-Error-Message:'%s'",
+                self.tap_stream_id,
+                str(exc),
+            )
+            return False
+
+    def is_child_stream(self):
+        """Return True if this stream is a child stream."""
+        return bool(self.parent)
 
 class IncrementalStream(BaseStream):
     """Base Class for Incremental Stream."""
