@@ -218,3 +218,31 @@ class TestClientRequests:
 
         # Only the dedicated rate-limit tier's max_tries (5) should apply.
         assert mock_request.call_count == 5
+
+    @pytest.mark.parametrize("bad_retry_after", ["nan", "inf", "-inf", "-5"])
+    @patch("requests.Session.request")
+    @patch("time.sleep", return_value=None)
+    def test_rate_limit_falls_back_to_default_for_malformed_retry_after(
+        self, mock_sleep, mock_request, client_config, bad_retry_after
+    ):
+        """`Retry-After` values that parse as a float but are non-finite (nan/inf/-inf)
+        or negative are malformed and must not be used directly -- they should fall
+        back to the documented default wait instead of being passed to `time.sleep`
+        (which raises on nan) or silently clamped in a way that skips waiting."""
+        from tap_notion.client import DEFAULT_RATE_LIMIT_WAIT
+        endpoint = "/rate-limit"
+
+        mock_request.side_effect = [
+            get_response(
+                429, {"error": "rate_limited"}, headers={"Retry-After": bad_retry_after}, raise_error=True
+            )
+        ] * 5
+
+        with pytest.raises(NotionRateLimitError):
+            with Client(client_config) as client:
+                client.get(endpoint, {}, self.default_headers)
+
+        assert mock_request.call_count == 5
+        sleep_calls = [call.args[0] for call in mock_sleep.call_args_list]
+        assert sleep_calls
+        assert all(value == float(DEFAULT_RATE_LIMIT_WAIT) for value in sleep_calls)

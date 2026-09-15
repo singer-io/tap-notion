@@ -1,3 +1,4 @@
+import math
 import backoff
 import requests
 from typing import Any, Dict, Mapping, Optional, Tuple
@@ -72,11 +73,10 @@ def _retry_after_wait(exc: NotionRateLimitError) -> float:
 
     try:
         wait_time = float(retry_after)
+        if not math.isfinite(wait_time) or wait_time < 0:
+            raise ValueError(f"Invalid Retry-After value: {retry_after!r}")
     except (TypeError, ValueError):
-        wait_time = DEFAULT_RATE_LIMIT_WAIT
-
-    # Guard against a malformed/negative header value.
-    wait_time = max(wait_time, 0.0)
+        wait_time = float(DEFAULT_RATE_LIMIT_WAIT)
 
     LOGGER.warning(
         "Rate limited (429) by Notion API. Waiting %.2f second(s) before retrying "
