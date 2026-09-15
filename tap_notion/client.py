@@ -10,11 +10,18 @@ from tap_notion.exceptions import (
     ERROR_CODE_EXCEPTION_MAPPING,
     NotionError,
     NotionBackoffError,
+    NotionRateLimitError,
 )
 
 LOGGER = get_logger()
 REQUEST_TIMEOUT = 300
 NOTION_VERSION = '2025-09-03'
+
+# Fallback wait (seconds) used when a 429 response does not
+# include a usable `Retry-After` header. Per Notion's API docs, clients
+# should slow down and retry after being rate limited; this value keeps
+# retries reasonably prompt while still backing off.
+DEFAULT_RATE_LIMIT_WAIT = 5
 
 
 def raise_for_error(response: requests.Response) -> None:
@@ -40,6 +47,44 @@ def raise_for_error(response: requests.Response) -> None:
         ).get("raise_exception", NotionError)
 
         raise exc(message, response) from None
+
+
+def _is_rate_limit_error(exc: Exception) -> bool:
+    """True if the exception is a Notion 429 rate-limit error.
+
+    Used as a `giveup` predicate for the generic backoff tier so that
+    rate-limit errors are only handled (once) by the dedicated
+    Retry-After-aware backoff tier below, instead of being retried twice.
+    """
+    return isinstance(exc, NotionRateLimitError)
+
+
+def _retry_after_wait(exc: NotionRateLimitError) -> float:
+    """Compute how long to sleep before retrying a 429 response.
+
+    Honors the Notion API's `Retry-After` response header (in seconds)
+    when present and parseable, per Notion's documented rate-limit
+    guidance. Falls back to a conservative default when the header is
+    missing or malformed.
+    """
+    response = getattr(exc, "response", None)
+    retry_after = response.headers.get("Retry-After") if response is not None else None
+
+    try:
+        wait_time = float(retry_after)
+    except (TypeError, ValueError):
+        wait_time = DEFAULT_RATE_LIMIT_WAIT
+
+    # Guard against a malformed/negative header value.
+    wait_time = max(wait_time, 0.0)
+
+    LOGGER.warning(
+        "Rate limited (429) by Notion API. Waiting %.2f second(s) before retrying "
+        "(Retry-After header: %s).",
+        wait_time,
+        retry_after,
+    )
+    return wait_time
 
 
 class Client:
@@ -128,6 +173,16 @@ class Client:
         ),
         max_tries=5,
         factor=2,
+        # Rate-limit (429) errors are handled by the dedicated Retry-After
+        # aware tier below, give up immediately here so they aren't retried twice.
+        giveup=_is_rate_limit_error,
+    )
+    @backoff.on_exception(
+        backoff.runtime,
+        NotionRateLimitError,
+        max_tries=5,
+        value=_retry_after_wait,
+        jitter=None,
     )
     def __make_request(self, method: str, endpoint: str, **kwargs) -> Optional[Mapping[Any, Any]]:
         with metrics.http_request_timer(endpoint) as timer:
