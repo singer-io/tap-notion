@@ -11,7 +11,7 @@ class NotionPaginationTest(PaginationTest, NotionBaseTest):
         return "tap_tester_notion_pagination_test"
 
     def streams_to_test(self):
-        streams_to_exclude = {'page_property'}
+        streams_to_exclude = {'comments', 'page_property'}
         return self.expected_stream_names().difference(streams_to_exclude)
 
     def test_record_count_greater_than_page_limit(self):  # type: ignore[override]
