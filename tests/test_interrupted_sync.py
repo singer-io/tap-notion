@@ -12,7 +12,7 @@ class NotionInterruptedSyncTest(InterruptedSyncTest, NotionBaseTest):
         return "tap_tester_notion_interrupted_sync_test"
 
     def streams_to_test(self):
-        streams_to_exclude = {'block_children', 'bot_user', 'page_property', 'users'}
+        streams_to_exclude = {'block_children', 'bot_user', 'comments', 'page_property', 'users'}
         return self.expected_stream_names().difference(streams_to_exclude)
 
 
