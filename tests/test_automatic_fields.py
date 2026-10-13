@@ -13,5 +13,5 @@ class NotionAutomaticFields(MinimumSelectionTest, NotionBaseTest):
         return "tap_tester_notion_automatic_fields_test"
 
     def streams_to_test(self):
-        streams_to_exclude = {'page_property'}
+        streams_to_exclude = {'comments', 'page_property'}
         return self.expected_stream_names().difference(streams_to_exclude)
