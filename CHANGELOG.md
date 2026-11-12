@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+  * Handle API 429 rate limits using the `Retry-After` response header. [#20](https://github.com/singer-io/tap-notion/pull/20)
+  * Upgrade `singer-python`, `requests` packages to latest version
+
 ## 0.0.4
   * Exclude Streams that the credentials cannot access (403) from the catalog during discovery; discovery fails only if the credentials cannot read any supported parent stream. [#16](https://github.com/singer-io/tap-notion/pull/16)
 
